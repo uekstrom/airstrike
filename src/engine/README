@@ -1,0 +1,2 @@
+The engine module contains the sprite engine of Airstrike, but no
+code specific to a certain sprite or level.

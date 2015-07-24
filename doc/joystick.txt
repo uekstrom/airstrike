@@ -1,0 +1,11 @@
+Joystick input is modeled after the existing keyboard input routines.
+Instead of using the SDL event system the joysticks are polled whenever an
+update message is sent to a sprite controlled by a human player. Different
+to the keyboard input there is a seperate function to get the current
+joystick state that has to be called before checking the state.
+Joystick input is digital, i.e. any (axis) movement above a certain
+threshold is interpreted as the corresponding action (e.g. acceleration).
+The mapping of joystick input to game actions is read from a config file
+(with hardcoded defaults in engine/ai.c if no config file is present)
+similar to the keyboard configuration. Each player can use up to one
+joystick (several players could share a joystick ;).

@@ -1,0 +1,23 @@
+level_name "Green Hills"
+gravity 0.1
+ground_friction 0.02
+
+sprite bouncer 200 200
+sprite bouncer 400 300
+sprite bouncer 600 200
+
+sprite airballoon 100 400
+
+generator multi bird 400 300 2 rx=100 ry=100
+
+generator singleton cloud 100 250 99 ry=200 vx=0.1
+generator singleton cloud 700 350 99 ry=200 vx=-0.1
+
+generator player biplane 440 440 3 tag=p1sprite
+generator player biplane 580 440 3 tag=p2sprite
+
+sprite hangar 180 470
+
+sprite pine 350 490
+sprite pine 500 550
+sprite pine 700 520

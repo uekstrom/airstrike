@@ -1,0 +1,18 @@
+level_name "Tutorial level"
+gravity 0.1
+bounce 0.2
+ground_friction 0.05
+
+# level ends when balloon is killed
+sprite airballoon 400 200 vy=1 tag=balloon
+trigger level-done tagkill balloon "msg=Balloon went KABOOM!"
+
+# infinite number of players: sprite x y lives [keywords]
+generator player biplane 100 500 0 objtag=p1plane
+generator player biplane 700 500 0 objtag=p2plane
+
+# fuel at 4 sec intervals, 6 barrels max (teaches people to take them)
+generator singleton fuel 400 520 6 timeout=40
+
+# what to do
+level_description "Destroy the balloon"

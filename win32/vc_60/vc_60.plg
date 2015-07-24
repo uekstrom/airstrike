@@ -1,0 +1,73 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: vc_60 - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP13F.tmp" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /incremental:no /pdb:"Release/airstrike.pdb" /machine:I386 /out:"airstrike.exe" 
+.\Release\animation.obj
+.\Release\bitmask.obj
+.\Release\coresprite.obj
+.\Release\display.obj
+.\Release\image.obj
+.\Release\input.obj
+.\Release\sound.obj
+.\Release\text.obj
+.\Release\xalloc.obj
+.\Release\ai.obj
+.\Release\array.obj
+.\Release\convenience.obj
+.\Release\engine.obj
+.\Release\glue.obj
+.\Release\level.obj
+.\Release\maths.obj
+.\Release\mech.obj
+.\Release\random.obj
+.\Release\schedule.obj
+.\Release\sound_fx.obj
+.\Release\sprite.obj
+.\Release\sprite_types.obj
+.\Release\ui.obj
+.\Release\airballoon.obj
+.\Release\asteroid.obj
+.\Release\biplane.obj
+.\Release\bird.obj
+.\Release\bomb.obj
+.\Release\bonus.obj
+.\Release\bonusmachine.obj
+.\Release\bouncer.obj
+.\Release\bullet.obj
+.\Release\cannon.obj
+.\Release\cloud.obj
+.\Release\draco.obj
+.\Release\dust.obj
+.\Release\explosions.obj
+.\Release\fire.obj
+.\Release\hangar.obj
+.\Release\hippo.obj
+.\Release\mark.obj
+.\Release\missile.obj
+.\Release\pine.obj
+.\Release\pingu.obj
+.\Release\puff.obj
+.\Release\smoke.obj
+.\Release\ufo.obj
+.\Release\wave.obj
+.\Release\zeppelin.obj
+.\Release\testengine.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\ADMINI~1\LOCALS~1\Temp\RSP13F.tmp"
+<h3>Output Window</h3>
+Linking...
+
+
+
+<h3>Results</h3>
+airstrike.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

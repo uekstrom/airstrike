@@ -1,0 +1,70 @@
+How to make the game run faster (for the user):
+
+Set your display to 15 or 16 bits per pixels.
+
+Make the window smaller.
+
+Turn off alpha channel sprites (this will not give you
+hardware acceleration at the moment).
+
+
+For developers:
+
+Things that could be done faster (in order of importance):
+
+* Use some partitioning scheme to make collision detection be
+  less than O(N^2).
+
+* Sprites that are just for display (ie effects) does not need
+  masks or all of the features of regular sprites. Make them a
+  separate type of object.
+
+* Enable hardware acceleration where possible.
+
+* Change alarms from O(nr waiting) to O(nr active) (ie to a sorted queue).
+
+Some profiling:
+
+Running 100000 frames without blitting (2 ai planes, about 20 mech
+objects, typical game scene) gives:
+
+real    0m29.486s
+user    0m22.230s
+sys     0m1.370s
+
+real    0m29.081s
+user    0m22.000s
+sys     0m1.440s
+
+This includes loading, converting, building masks etc.
+
+Looks like < 0.22 ms/frame. Pretty good imo.
+
+without cropping:
+
+real    0m33.266s
+user    0m25.710s
+sys     0m1.290s
+ 
+real    0m32.949s
+user    0m25.960s
+sys     0m1.460s
+
+With extra optimization (-O3 -fomit-frame-pointer -funroll-loops -foptimize-sibling-calls -march=i686) about 19s user time. 
+
+With about 50 biplanes in a heap on the ground things look like
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total
+ time   seconds   seconds    calls  ms/call  ms/call  name
+ 67.77      1.85     1.85   820213     0.00     0.00  bitmask_overlap_area
+  7.33      2.05     0.20  2096831     0.00     0.00  bitmask_overlap_pos
+  4.03      2.16     0.11     1083     0.10     1.81  sprite_group_coll
+  3.30      2.25     0.09   119823     0.00     0.00  sprite_move
+  2.20      2.31     0.06    77717     0.00     0.02  mech_sprite_collide
+  1.83      2.36     0.05   122195     0.00     0.00  animation_draw
+  1.47      2.40     0.04   678431     0.00     0.00  sprite_get_overlap
+
+On this machine this means approx 2us/overlap_area, 1us/overlap_pos..
+This is an extreme situation, so it's probably nothing to worry about.
+This is without cropping.

@@ -1,0 +1,29 @@
+Development related utils.
+
+genspritelist.sh: Generates header files listing the different sprite
+		  types from the sources in src/sprite_types.
+
+showanim.c: Utility to preview animations over different backgrounds
+            and at different speeds.
+
+hfsmooth.c: Loads an image and interprets the red component
+	    as the high byte of a 16 bit integer, and the green
+	    component as the low byte. It then smooths the
+	    resulting field, and saves the result in a new 
+	    image. This is usable when creating heightfields
+	    for use in povray.
+
+blur.sh: Given a list of images this script will average them
+	 two and two, place the result in the first filename in 
+	 each pair, and remove the second one. The result is
+	 a simple form of motion blur.
+	 example: 
+            
+            blur.sh 1.png 2.png 3.png 4.png
+         
+         Will replace 1.png with the average of
+	 1.png and 2.png, and 3.png with the average of 
+         3.png and 4.png. 2.png and 4.png will be deleted.
+	
+        The script can of course be applied several times for
+	better quality blur.

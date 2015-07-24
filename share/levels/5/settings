@@ -1,0 +1,29 @@
+level_name "Doughnut Run"
+gravity 0.1
+
+# the upper woods
+sprite pine 400 147
+sprite pine 378 148
+sprite pine 422 148
+sprite pine 350 152
+sprite pine 450 152
+sprite pine 320 162
+sprite pine 480 162
+
+# leader bird above
+generator singleton bird 400 50 99 vx=2 vy=-2
+
+# lots of (4) follower birds below
+# (note that the other birds are also counted, that's why the count is 5!)
+generator multi bird 400 520 5 rx=200 ry=60
+
+# some falling boxes
+sprite box 300 160
+sprite box 500 160
+
+# players: x y lives
+generator player biplane 280 180 3 tag=p1plane
+generator player biplane 520 180 3 tag=p2plane
+
+# and fuel at 5 sec intervals
+generator singleton fuel 400 450 5 timeout=50

@@ -1,0 +1,14 @@
+level_name "The Pit"
+gravity 0.1
+
+# handle bonuses
+sprite bonusmachine 400 80
+bonuses AIRBALLOON HIPPO LOVE MISSILE PARACHUTE UFO ZEPPELIN
+
+# zeppelin
+generator singleton zeppelin 100 300 99 vx=4
+# TODO: ai=patrol
+
+# players: sprite x y lives
+generator player biplane 80 400 3 vy=1 tag=p1plane
+generator player biplane 720 400 3 vy=1 tag=p2plane

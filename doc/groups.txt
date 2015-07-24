@@ -1,0 +1,37 @@
+The sprites in Airstrike are organized into different
+sprite_group_t's, depending on their purpose. Short summary follows,
+in the same order as the sprites are drawn.
+
+bg_mech_group: 
+
+Sprites that are part of the scenery, but which does not interact with
+other sprites of their kind. Example: trees. This is done to save cpu
+on collision detection and handling. This group interacts with
+mech_group and bullet_group. Contains only sprite of type
+mech_sprite_t.
+
+mech_group:
+
+This is where the main action takes place. Full mechanics between all
+sprites in this group. Contains only sprite of type mech_sprite_t.
+Interacted with itself, bg_mech_group and bullet_group.
+
+bullet_group:
+
+No advanced mechanics, and no self-interaction. Sprites in this
+group are simply of type sprite_t. Interacts with mech_group.
+
+effects_group:
+
+Sprites of type sprite_t. Does not interact (but should, perhaps?).
+Typically explosions and smoke.
+
+foreground_group:
+
+Sprites of type sprite_t. Does not interact. Sprites here are
+of course guaranteed to be drawn on top of all other kinds. For
+clouds etc.
+
+ui_group:
+
+obsolete, the ui should be handled in other ways now.

@@ -1,0 +1,34 @@
+level_name "Green Hills (traditional)"
+gravity 0.1
+bounce 0.5
+
+# some balloons...
+sprite bouncer 200 200 vy=1
+sprite bouncer 400 300 vy=1
+sprite bouncer 600 200 vy=1
+
+# leader + a couple of other birds, at 3 sec intervals
+generator multi bird 400 300 3 rx=240 ry=120 vx=2 vy=2 timeout=30
+
+# ...and two clouds
+generator singleton cloud 80 250 99 vx=0.5 ry=150 timeout=50
+generator singleton cloud 720 250 99 vx=-0.5 ry=150 timeout=70
+
+# players: sprite x y lives [keys]
+generator player biplane 100 500 3 objtag=p1plane
+generator player biplane 700 500 3 objtag=p2plane
+
+# infinitely fuel at 5 sec intervals (after previous barrel taken)
+generator singleton fuel 400 520 0 timeout=50
+
+# level ends when 5 birds are killed
+trigger level-done spritekill bird 5 "msg=Five birds killed!"
+
+# level fails if no (1-5) balloons are left
+trigger level-fail sprites bouncer 1 5 "msg=No balloons left!"
+
+# level restarts if no player is alive or at least one has died
+trigger level-restart player 0 1 "msg=Player died..."
+
+# what to do
+level_description "Kill five birds.\nAt least one balloon has to survive."

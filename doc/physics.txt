@@ -1,0 +1,67 @@
+Some notes about the physics model:
+Large letters are used for vectors.
+
+Basic (with no intention of being 'realistic'):
+All aerodynamical objects are shaped as ellipsoids,
+in the way they interact with the air.
+
+                  
+                  ^ N_n (up)
+                  |  
+      ___        ____ 
+       | A_t    /    \ ---> N_t ('forward' direction)
+      _|_       \____/
+       
+                |----|
+                  A_n 
+
+In the case of A_n = A_t we get:
+
+F_air = - A_n*v^2*(V/|V|), where v is velocity relative to the wind.
+
+Air is deflected from the body under the angle alpha, where
+  
+    |V|cos(alpha) = (N_n . V)    
+
+In a given instant the momentum of the air hitting the object
+is
+
+P_air ~ V*(|V.N_t|A_t + |V.N_n|A_n)
+
+Assuming A_t < A_n, a part, D, of the momentum is
+deflected against the normal N_n. 
+
+D ~ (V.N_n)*(A_t - A_n) (or maybe A_n/A_t ?)
+
+After the air has interacted with the object the momentum 
+of the air is
+
+P_after = P_air*(1 - x) - N_n*y, where the object has
+gained x*P_air + N_n*y in momentum.
+
+Aerodynamics:
+
+
+		     ^ Wings lift
+	       	     |
+                    _--__/\  <
+     air res-->   |(_--___/   ) shape/air interaction
+     engine<---      o
+		      | gravity
+		      v
+
+
+Forces acting on a body described by {R,angle,V,omega}
+engine pull Fe(angle)
+air resistance Fair(V,angle,wind)
+lifting force Flift(Fair,angle)
+
+Torques:
+Dampening Mdamp(omega)
+Air res. minimization Mair(Fair,angle)
+
+More specifically:
+Fe = C_engine*N_angle
+
+Fair = A[2]V_eff, where A[2] is a 2x2 matrix, dependent on
+N_angle*V_eff and the rudders. V_eff = V - Wind

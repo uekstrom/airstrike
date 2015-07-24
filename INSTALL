@@ -1,0 +1,43 @@
+The following is build instructions for Unix-like systems. For 
+Windows and other platforms you may have to experiment a bit. The
+game is know to build under Windows and MacOSX.
+
+Requirements:
+	A C compiler.
+		The game is developed using gcc (2.95 and 3.2), but
+		with small modifications it should be portable
+		to other compilers. You may have to define INLINE
+		suitably in the makefile.
+		The makefile uses the -MM option of gcc, but
+		this is not neccessary for a simple build.
+	
+	GNU make
+		The makefile also uses sed, grep and sh.
+		You can probably live without this, but why bother?
+
+	SDL 	
+		Any version >= 1.2 will probably work. Run 
+		'sdl-config --version' to see if you have this.
+		If not, go to www.libsdl.org and get the development
+		package. (Just having the runtime library is not
+		enough.)
+	
+	SDL_image 
+		Library for loading png files. This should
+		be availible from the same place as SDL. 
+
+Building:
+	Run make in the top level directory. This should
+	create an executable named 'airstrike', which
+	must be run from the top level directory for it
+	to find the data files. This will change in the future.
+
+	To do a build with sound do "make airstrike-sound".
+	
+	Config file location can be adjusted in src/config.h;
+	the data file directory is set in the config file.	
+
+If you encounter any problems please email ulfek@ifm.liu.se and
+include the compiler output and a description of your system.
+
+--Ulf

@@ -1,0 +1,35 @@
+This is the plan for what the levels coming with
+Airstrike will contain.
+
+Levels:
+* Tutorial level:
+  - ground
+  - hot-air balloon
+  - ends when the balloon is destroyed
+* Three hills:
+  - cloud
+  - 3 balloons
+  - three birds
+* Two platforms:
+  - air-balloon
+  - 4 walking penguins (which switch gravity when shot)
+  - the amazing bouncing hippo
+* Maze (TODO):
+  - tile maze background
+  - ends when reaching end of the level
+  - fails if time runs out
+* Island:
+  - cannon
+  - dragon
+  - water (with piranhas)
+* The pit (space cave):
+  - bonus machine & bonuses
+  - zeppelin
+* Grass doughnut:
+  - trees
+  - lots of birds
+* Mountain range:
+  - TODO...
+* Empty level (TODO):
+  - ufo
+  - homing missiles

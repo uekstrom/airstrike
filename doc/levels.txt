@@ -1,0 +1,23 @@
+Level descriptions, using the AirStrike Interpreter.
+In addition to these functions you can set variables by using
+the NAME=VALUE syntax.
+
+Existing
+--------
+fgelement name x y	  Create a foreground (colliding) element. name
+			  refers to an image name.png in graphics/bg.
+bgelement name x y	  Create a background (non-colliding) element.
+levelsize width height	  Sets the level size
+bgcolor r g b		  Sets the background color.
+
+
+Todo
+----
+sprite type x y		  Create a sprite of type at (x,y).
+playerspawn player_nr x y Sets the spawning point of player player_nr.
+
+
+Future
+------
+generator type sprite_type x y
+

@@ -1,0 +1,865 @@
+<HTML><HEAD><TITLE>Galaxy Include File</TITLE></HEAD>
+
+<FONT FACE="Arial, Helvetica, Switzerland"><BODY BGCOLOR=#FFFFFF>
+
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=10><TR><TD BGCOLOR=#C0C0C0 ALIGN=CENTER>
+<FONT SIZE=+2><B>GALAXY INCLUDE FILE </B></FONT><FONT SIZE=+1><I>for Persistence of Vision 3.x</I></FONT>
+</TD></TR></TABLE>
+
+<I>
+<P>Created by Chris Colefax, 1 February 1998
+<BR>Updated 9 August 1998: updated for POV-Ray 3.1
+</I>
+
+<P><HR>
+
+<P><B><I><A HREF="#Installation">INSTALLATION</A></B></I>
+<P><B><I><A HREF="#Quick Start">QUICK START</A></B></I>
+<P><B><I><A HREF="#Galaxy Files">UNDERSTANDING THE DIFFERENT GALAXY.* FILES</A></B></I>
+<P><B><I><A HREF="#Options">GALAXY OPTIONS</A></B></I>
+        <UL><I><A HREF="#INC Options">GALAXY INCLUDE FILE OPTIONS</A></I>
+                <UL><A HREF="#galaxy_seed">galaxy_seed</A>
+                <BR><A HREF="#galaxy_colour">galaxy_colour</A>
+                <BR><A HREF="#galaxy_colouration">galaxy_colouration</A>
+                <BR><A HREF="#galaxy_colour_turb">galaxy_colour_turb</A>
+                <BR><A HREF="#galaxy_intensity">galaxy_intensity</A>
+                <BR><A HREF="#galaxy_rotate">galaxy_rotate</A>
+                <BR><A HREF="#galaxy_distance">galaxy_distance</A>
+                <BR><A HREF="#galaxy_origin">galaxy_origin</A>
+                <BR><A HREF="#galaxy_bg">galaxy_bg</A>
+                <BR><A HREF="#galaxy_objects">galaxy_objects</A>
+                <BR><A HREF="#galaxy_starfield">galaxy_starfield</A>
+                <BR><A HREF="#options_only">options_only</A>
+                <BR><A HREF="#debug_options">debug_options</A>
+                </UL>
+
+        <BR><I><A HREF="#BG Options">GALAXY BACKGROUNDS FILE OPTIONS</A></I>
+                <UL><A HREF="#galaxy_bgstars">galaxy_bgstars</A>
+                <BR><A HREF="#galaxy_bgnebula">galaxy_bgnebula</A>
+                <BR><A HREF="#galaxy_nebula_sphere">galaxy_nebula_sphere</A>
+                <BR><A HREF="#galaxy_nebula_ambient">galaxy_nebula_ambient</A>
+                <BR><A HREF="#galaxy_colour options">galaxy_colour1, galaxy_colour2, galaxy_colour3</A>
+                <BR><A HREF="#galaxy_star_colouration">galaxy_star_colouration</A>
+                <BR><A HREF="#galaxy_pattern_scale">galaxy_pattern_scale</A>
+                <BR><A HREF="#galaxy_pattern_origin">galaxy_pattern_origin</A>
+                <BR><A HREF="#galaxy_turb_origin">galaxy_turb_origin</A>
+                <BR><A HREF="#galaxy_declare_only">galaxy_declare_only</A>
+                </UL>
+
+        <BR><I><A HREF="#SF Options">GALAXY STARFIELD FILE OPTIONS</A></I>
+                <UL><A HREF="#star_count">star_count</A>
+                <BR><A HREF="#star_colour">star_colour</A>
+                <BR><A HREF="#star_type">star_type</A>
+                <BR><A HREF="#star_scale">star_scale</A>
+                <BR><A HREF="#star_distance">star_distance</A>
+                <BR><A HREF="#star_spread">star_spread</A>
+                <BR><A HREF="#star_distribution">star_distribution</A>
+                <BR><A HREF="#star_colour_turb">star_colour_turb</A>
+                <BR><A HREF="#star_brightness_turb">star_brightness_turb</A>
+                </UL>
+
+        <BR><I><A HREF="#OBJ Options">GALAXY OBJECTS FILE OPTIONS</A></I>
+                <UL><A HREF="#galaxy_object_name">galaxy_object_name</A>
+                <BR><A HREF="#galaxy_object_scale">galaxy_object_scale</A>
+                <BR><A HREF="#galaxy_object_rotate">galaxy_object_rotate</A>
+                <BR><A HREF="#galaxy_object_flatten">galaxy_object_flatten</A>
+                <BR><A HREF="#galaxy_object_position">galaxy_object_position</A>
+                <BR><A HREF="#galaxy_cluster_name">galaxy_cluster_name</A>
+                <BR><A HREF="#galaxy_cluster_objects">galaxy_cluster_objects</A>
+                <BR><A HREF="#galaxy_cluster_scale">galaxy_cluster_scale</A>
+                <BR><A HREF="#galaxy_cluster_rotate">galaxy_cluster_rotate</A>
+                <BR><A HREF="#galaxy_cluster_spread">galaxy_cluster_spread</A>
+                <BR><A HREF="#galaxy_scale_turb">galaxy_scale_turb</A>
+                <BR><A HREF="#galaxy_rotate_turb">galaxy_rotate_turb</A>
+                <BR><A HREF="#galaxy_declare_only">galaxy_declare_only</A>
+                </UL>
+        </UL>
+<P><B><I><A HREF="#Troubleshooting">TROUBLESHOOTING</A></B></I>
+<P><B><I><A HREF="#Legal">COPYRIGHT AND LEGAL INFORMATION</A></B></I>
+<P><B><I><A HREF="#Contact">CONTACTING THE AUTHOR</A></B></I>
+
+<P>
+<BR>
+<A NAME="Installation"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>INSTALLATION</B></I></FONT>
+</TD></TR></TABLE>
+The Galaxy Include File package consists of four files (<I>Galaxy.inc,
+Galaxy.bg, Galaxy.obj</I> and <I>Galaxy.sf</I>) which work separately and together,
+depending on the desired effect.  All four files should be copied to
+one of the directories (folders) in your POV-Ray library path.  Normally
+this is the <I>INCLUDE</I> sub-directory of the directory where you installed
+POV-Ray, so if you installed POV-Ray in <I>C:\POVRAY</I> you should copy the files
+to <I>C:\POVRAY\INCLUDE</I>.  On a Windows 95 system, this is probably something
+like:
+
+<P><I>C:\Program Files\POV-Ray for Windows\Include</I>
+
+<P>On UNIX and similar systems, where filenames are case-sensitive, you may
+have to rename the four include files so that the filenames are all uppercase.
+This will enable you to render the sample files without modification.
+
+
+<P>
+<BR>
+<A NAME="Quick Start"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>QUICK START</B></I></FONT>
+</TD></TR></TABLE>
+The Galaxy Include File package allows you to create a variety of outer-
+space scenes which can be used on their own or as backgrounds to other
+scenes and animations.  In addition to spiral galaxies, the Galaxy Include
+File package can also create starfields, star clusters, nebulae, comets,
+and meteor showers.  You can easily create a galaxy scene containing a
+selection of these elements by adding the following lines to a POV-Ray
+scene file:
+
+<P><CODE>#declare galaxy_seed = 123456789;
+<BR>#include "GALAXY.INC"</CODE>
+
+<P>You can choose any positive or negative integer you like for the
+<A HREF="#galaxy_seed">galaxy_seed</A> value.  When you render this scene, the Galaxy Include File
+will select random options, and then use <I>Galaxy.bg, Galaxy.obj,</I> and
+<I>Galaxy.sf</I> to create the galaxy scene.  In addition to changing the seed
+number, you can use a variety of options to modify the galaxy scene.
+To use any of these options just add the following line to your scene file,
+<I>before</I> including <I>Galaxy.inc</I>:
+
+<P><CODE>#declare </CODE><I>[variable-name]</I><CODE> = </CODE><I>[value]</I>
+
+<P>substituting the desired variable name and value where appropriate.
+Note that <I>Galaxy.inc</I> (or any of the <I>Galaxy.*</I> files) should <B>never</B> be
+included at the start of a scene (like <I>colors.inc</I> or <I>textures.inc</I>).
+They should only be included after declaring the desired galaxy options.
+
+<P>As well as creating random galaxy scenes using <I>Galaxy.inc</I>, you can use
+<I>Galaxy.bg, Galaxy.obj</I>, and/or <I>Galaxy.sf</I> separately to build custom galaxy
+scenes piece by piece.  You can include any of the four <I>Galaxy.*</I> files as
+many times as you want in a single POV-Ray scene, declaring separate options
+for each <I>Galaxy.*</I> inclusion.  Note that you don't have to redeclare any
+options that are common to any or all of the <I>Galaxy.*</I> files, eg:
+
+<P><CODE>// COMMON GALAXY OPTIONS
+<BR>#declare galaxy_colour1 = &lt 1.3, 1.2, .8&gt ;
+<BR>#declare galaxy_colour2 = &lt 1, .5, .3 &gt ;
+<BR>#declare galaxy_rotate = &lt 90, 180, 0&gt ;
+
+<P>// GALAXY BACKGROUND
+<BR>#declare galaxy_bgstars = 4;
+<BR>#declare galaxy_bgnebula = off;
+<BR>#declare galaxy_nebula_sphere = 5;
+<BR>#include "GALAXY.BG"
+
+<P>// GALAXY OBJECTS
+<BR>#declare galaxy_object_name = "Nebula3"
+<BR>#declare galaxy_cluster_name = "Star4"
+<BR>#include "GALAXY.OBJ"
+
+<BR>#declare galaxy_object_name = "Comet2"
+<BR>#declare galaxy_cluster_name = ""
+<BR>#include "GALAXY.OBJ"</CODE>
+
+<P>In the above example the same colours and rotation are applied to each
+element of the galaxy scene, without having to redeclare them each time
+you include one of the <I>Galaxy.*</I> files.
+
+
+<P>
+<BR>
+<A NAME="Galaxy Files"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>UNDERSTANDING THE DIFFERENT GALAXY.* FILES</B></I></FONT>
+</TD></TR></TABLE>
+As mentioned above, the four different files of the Galaxy Include File
+package can be used in a variety of ways, depending on how you wish to
+create your galaxy scene.  The files are:
+
+<P>The Galaxy Backgrounds File (<I>GALAXY.BG</I>): this include file is used to
+create a selection of starfield and nebula pigments (including a Milky Way
+pigment), which can either be mapped directly to the sky_sphere, or to an
+actual sphere object.  Although <I>Galaxy.bg</I> allows you to create backgrounds
+quite easily, the file gives you little control over the exact shape of the
+nebulae, and the starfields are not suitable for anti-aliasing or
+animations in which the camera is moved or altered in some way.
+
+<P>The Galaxy Starfield File (<I>GALAXY.SF</I>): this include file is used to create
+starfields consisting of actual objects, rather than textures.  Because of
+this, the starfields can be anti-aliased and animated very well, and
+improved programming means that the parsing takes about one fifth of the
+time needed for previous versions of the Starfield Include File.  <I>Galaxy.sf</I>
+can create three different types of stars, and can be used in conjunction
+with <I>Galaxy.bg</I> to create stars larger than one pixel in size.
+
+<P>The Galaxy Objects File (<I>GALAXY.OBJ</I>): this include file is used to create
+and position a selection of outer-space objects, including four different
+feature stars, six different nebulae, five different galaxies, three
+different comets, and two different meteors.  The objects can be positioned
+individually, or in random clusters (eg. star clusters or meteor showers).
+
+<P>The Galaxy Include File (<I>GALAXY.INC</I>): this include file uses the above three
+files to create random galaxy scenes.  <I>Galaxy.inc</I> selects random options for
+the other files, including colours, object types, scaling, rotation, etc.,
+and can automatically include the other files into your POV-Ray scene, making
+it quick and easy to use the Galaxy Include File package without having to
+declare separate options for each of the <I>Galaxy.*</I> files.
+
+
+<P>
+<BR>
+<A NAME="Options"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>GALAXY OPTIONS</B></I></FONT>
+</TD></TR></TABLE>
+This section explains the various options that can be used with <I>Galaxy.inc</I>,
+as well as the options that can be used separately with <I>Galaxy.bg,
+Galaxy.obj</I>, and <I>Galaxy.sf</I>.
+
+<P>Note that the Galaxy Include File package supports both British and
+American English, eg: <I>galaxy_colour</I> and <I>galaxy_color</I> are interchangeable,
+as are <I>galaxy_colouration</I> and <I>galaxy_coloration</I>, etc.
+
+
+<P><HR><A NAME="INC Options"></A>
+<B>GALAXY INCLUDE FILE OPTIONS</B>
+<HR>
+The options in this section apply to <I>Galaxy.inc</I>.
+
+<P><A NAME="galaxy_seed"></A>
+<B>galaxy_seed</B>
+<HR>
+This is the random number seed used for all random aspects of the Galaxy
+Include File package.  Changing this number can result in vastly different
+galaxy scenes, and any positive or negative integer accepted by POV-Ray can
+be used.  The default <I>galaxy_seed</I> value is 0.  Each time you include
+<I>Galaxy.inc</I>, a new <I>galaxy_seed</I> value is chosen at random.  To find out the
+new value, see <A HREF="#debug_options">debug_options</A>.
+
+<P><A NAME="galaxy_colour"></A>
+<B>galaxy_colour</B>
+<HR>
+Use this option to change the overall colour of the galaxy scene.  The
+exact result of changing this option depends on the current colour of
+the galaxy scene, eg. if the current galaxy scene is predominantly green,
+setting <I>galaxy_colour</I> to &lt 1.5, 0.1, 1&gt will increase the amount of red
+in the scene, decrease the amount of green, and leave the blue unaltered,
+resulting in a purple coloured galaxy.
+<BR>The default <I>galaxy_colour</I> value is &lt 1, 1, 1&gt (which has no effect).
+
+<P><A NAME="galaxy_colouration"></A>
+<B>galaxy_colouration</B>
+<HR>
+Use this option to increase of decrease the amount of colour in the galaxy
+scene.  Good values range from 0 (little or no colour) to 1 or larger (very
+saturated colour).  Setting this option to a low value means that the
+<A HREF="#galaxy_colour">galaxy_colour</A> option has more of an effect.
+<BR>The default <I>galaxy_colouration</I> value is 0.5
+
+<P><A NAME="galaxy_colour_turb"></A>
+<B>galaxy_colour_turb</B>
+<HR>
+Use this option to alter the amount of colour variation between different
+elements of the galaxy scene.  Setting this option to 0 results in a
+monochromatic galaxy scene, while larger values give greater colour
+variation.  The default <I>galaxy_colour_turb</I> value is 0.2
+
+<P><A NAME="galaxy_intensity"></A>
+<B>galaxy_intensity</B>
+<HR>
+Use this option to increase or decrease the overall visibility of the
+galaxy scene.  Good values usually lie somewhere between 0 (completely
+transparent) and 5 (very opaque).
+<BR>The default <I>galaxy_intensity</I> value is 1
+
+<P><A NAME="galaxy_rotate"></A>
+<B>galaxy_rotate</B>
+<HR>
+This option is a vector that is used to rotate the galaxy scene as a whole.
+It can be useful when you want to create the illusion of movement in an
+animation, without having to transform the camera and all the other objects
+in a scene.  The default <I>galaxy_rotate</I> value is &lt 0, 0, 0&gt
+
+<P><A NAME="galaxy_distance"></A>
+<B>galaxy_distance</B>
+<HR>
+All the objects in a galaxy scene are arranged around a giant sphere,
+usually surrounding the camera.  You can use this option to set the size of
+this sphere.  The default value is 10000, which should be sufficient for
+most scenes and animations.  If the rest of the objects in your scene are
+this size or larger, you may need to increase this value.  However, values
+that are too large may result in disappearing objects, or cause POV-Ray to
+crash when rendering the scene.
+
+<P><A NAME="galaxy_origin"></A>
+<B>galaxy_origin</B>
+<HR>
+As mentioned above, the objects in a galaxy scene are arranged around a
+giant sphere.  By default this sphere is centred around &lt 0, 0, 0&gt, but
+you can use this option to change this value.
+
+<P><A NAME="galaxy_bg"></A>
+<B>galaxy_bg</B>
+<HR>
+Use this option to disable the elements of the galaxy scene created by the
+Galaxy Backgrounds File (<I>Galaxy.bg</I>).  Setting this option to false (or off)
+removes the background stars, background nebulae, and nebula sphere from
+the galaxy scene.  To remove these elements individually, see <A HREF="#BG Options">Background File Options</A>.
+
+<P><A NAME="galaxy_objects"></A>
+<B>galaxy_objects</B>
+<HR>
+Use this option to disable the elements of the galaxy scene created by the
+Galaxy Objects File (<I>Galaxy.obj</I>).  Setting this option to false (or off)
+removes any feature nebulae, stars, comets, star clusters, or meteor
+showers from the galaxy scene.  Note that this option is always set to
+false after including <I>Galaxy.inc</I>; if you wish to include <I>Galaxy.inc</I> a
+second time (or third, fourth, etc.) and have it automatically create galaxy
+objects, you must manually set <I>galaxy_objects</I> to true before including
+<I>Galaxy.inc</I>.
+
+<P><A NAME="galaxy_starfield"></A>
+<B>galaxy_starfield</B>
+<HR>
+Use this option to remove the starfield objects in a galaxy scene created by
+the Galaxy Starfield File (<I>Galaxy.sf</I>).  Note that this option is always
+set to false after including <I>Galaxy.inc</I>; if you wish <I>Galaxy.inc</I> to
+automatically create another starfield, you must manually set
+<I>galaxy_starfield</I> to true before including <I>Galaxy.inc</I>.
+
+<P><A NAME="options_only"></A>
+<B>options_only</B>
+<HR>
+Setting this option to true will cause <I>Galaxy.inc</I> to declare all the options
+it uses for <I>Galaxy.bg, Galaxy.obj</I>, and <I>Galaxy.sf</I>, but these three files will
+not be automatically included.  You can use this to then alter selected
+galaxy options, before including some or all of the remaining <I>Galaxy.*</I> files,
+eg. say you have discovered you like the galaxy produced by using 7362512
+as the <A HREF="#galaxy_seed">galaxy_seed</A> value, but you want to change the galaxy object used:
+
+<P><CODE>#declare galaxy_seed = 7362512;
+<BR>#declare options_only = true;
+<BR>#include "GALAXY.INC"
+
+<BR>#declare galaxy_object = "Galaxy2"
+<BR>#include "GALAXY.OBJ"
+<BR>#include "GALAXY.BG"
+<BR>#include "GALAXY.SF"</CODE>
+
+<P>Note that setting <I>options_only</I> to true is the same as setting <A HREF="#galaxy_bg">galaxy_bg</A>,
+<A HREF="#galaxy_objects">galaxy_objects</A>, and <A HREF="#galaxy_starfield">galaxy_starfield</A> to false.
+
+<P><A NAME="debug_options"></A>
+<B>debug_options</B>
+<HR>
+Setting this option to true will cause <I>Galaxy.inc</I> to output all the random
+option values it uses to POV-Ray's debug stream.  You can then use the +GD
+command-line switch, or the Debug_File INI file setting, to direct the
+debug stream to a file.  This file can then be altered as desired, and
+included directly into your scene before including <I>Galaxy.bg, Galaxy.obj</I>,
+and/or <I>Galaxy.sf</I> (see the <I>Rand.pov</I> and <I>Rand.ini</I> files for an example of how
+this option can be used).
+
+
+<P><HR><A NAME="BG Options"></A>
+<B>GALAXY BACKGROUNDS FILE OPTIONS</B>
+<HR>
+The options in this section apply to <I>Galaxy.bg</I>.  In addition to the
+options below, the Galaxy Backgrounds File supports the <A HREF="#galaxy_intensity">galaxy_intensity</A>,
+<A HREF="#galaxy_rotate">galaxy_rotate</A>, <A HREF="#galaxy_distance">galaxy_distance</A>, and <A HREF="#galaxy_origin">galaxy_origin</A> options, as detailed above.
+
+<P><A NAME="galaxy_bgstars"></A>
+<B>galaxy_bgstars</B>
+<HR>
+This option specifies the type of background star pigment mapped to the
+sky_sphere.  Values range from 1 (sparse) to 3 (dense), and 4 (sparse) to
+6 (dense). The first group has a mixture of faint and light stars, while
+the second is mostly composed of bright stars of different colours.  If you
+don't want any background stars (for an animation, say), set this option
+to false.  The default <I>galaxy_bgstars</I> value is 2
+
+<P><A NAME="galaxy_bgnebula"></A>
+<B>galaxy_bgnebula</B>
+<HR>
+This option specifies the type of nebula pigment mapped to the sky_sphere.
+Possible values are:
+
+<UL>1 - Default nebula
+<BR>2 - Light reflection nebula
+<BR>3 - Nebula criss-crossed by dark gas lanes
+<BR>4 - Spidery nebula
+<BR>5 - Dense reflection nebula
+<BR>6 - Milky Way pattern
+</UL>
+
+<P>Values 1 to 5 correspond roughly with the nebulae created by <I>Galaxy.obj</I>
+(see <A HREF="#galaxy_object_name">galaxy_object_name</A>).  If you don't want a background nebula, set this option
+to false.  The default <I>galaxy_bgnebula</I> value is 6
+
+<P><A NAME="galaxy_nebula_sphere"></A>
+<B>galaxy_nebula_sphere</B>
+<HR>
+Use this option to create a large sphere (the radius is specified by the
+<A HREF="#galaxy_distance">galaxy_distance</A> option) mapped with a nebula pigment.  Possible values are
+1 to 5, corresponding to the <A HREF="#galaxy_bgnebula">galaxy_bgnebula</A> option.  If you don't want a
+nebula sphere, set this value to false.
+<BR>The default <I>galaxy_nebula_sphere</I> value is 1
+
+<P><A NAME="galaxy_nebula_ambient"></A>
+<B>galaxy_nebula_ambient</B>
+<HR>
+Use this option to change the ambient light value of the nebula sphere.
+The default <I>galaxy_nebula_ambient</I> value is &lt 1, 1, 1&gt
+
+<P><A NAME="galaxy_colour options"></A>
+<B>galaxy_colour1, galaxy_colour2, galaxy_colour3</B>
+<HR>
+Use this option to set the RGB colour value used to create the galaxy
+background pigments.  For a monochromatic galaxy scene, only declare
+the first option; for a scene that uses two colours declare both
+<I>galaxy_colour1</I> and <I>galaxy_colour2</I>.  Finally, to add another colour to
+the galaxy pigments declare all three galaxy_colour options.
+<BR>The default <I>galaxy_colour1</I> value is &lt 1, 1, 1&gt (White).
+
+<P><A NAME="galaxy_star_colouration"></A>
+<B>galaxy_star_colouration</B>
+<HR>
+This option sets the colour saturation used by the six background star
+pigments, and by the Milky Way pigment.  Good values range from 0 (no
+colour) to 1 (complete colour).  An interesting effect can be achieved by
+using negative numbers, which result in the stars being the opposite colour
+to the nebulae and other objects in the galaxy scene.
+<BR>The default <I>galaxy_star_colouration</I> value is 0.2
+
+<P><A NAME="galaxy_pattern_scale"></A>
+<B>galaxy_pattern_scale</B>
+<HR>
+Use this option to alter the size of the patterns used to create the
+galaxy background pigments.  Changing this option does not alter the general
+shape of the pigments; it only changes the scaling of the patterns used
+within each pigment.  The default <I>galaxy_pattern_scale</I> value is 1
+
+<P><A NAME="galaxy_pattern_origin"></A>
+<B>galaxy_pattern_origin</B>
+<HR>
+Use this option to translate the origin of the patterns used to create the
+galaxy background pigments.  Changing this option can completely alter the
+shapes created by the pigments, and can be changed gradually within an
+animation to create dynamic nebulae, etc.
+<BR>The default <I>galaxy_pattern_origin</I> is &lt 0, 0, 0&gt
+
+<P><A NAME="galaxy_turb_origin"></A>
+<B>galaxy_turb_origin</B>
+<HR>
+Many of the galaxy pigments use some sort of turbulence; changing this
+option translates the origin of the turbulence before it is applied to the
+pigment.  You can use this option to alter the shapes of various pigments,
+or to animate the turbulence applied to the pigments.
+<BR>The default <I>galaxy_turb_origin</I> is &lt 0, 0, 0&gt
+
+<P><A NAME="galaxy_declare_only"></A>
+<B>galaxy_declare_only</B>
+<HR>
+Setting this option to true stops <I>Galaxy.bg</I> from actually creating the
+sky_sphere or nebula sphere to which the galaxy background pigments are
+mapped.  Instead, the file declares each of the 12 pigments separately, so
+that you can then use them in the ways you use any other pigment.  The
+pigment names are BGStars? (from 1 to 6), BGNebula? (from 1 to 5), and
+BGMilkyWay.  Each of the pigments is designed to be used at unit size, but
+they can be scaled or transformed any way you want, eg:
+
+<P><CODE>#declare galaxy_declare_only = true;
+<BR>#include "GALAXY.BG"
+
+<P>sky_sphere {
+<BR>pigment {BGStars3}
+<BR>pigment {BGMilkyWay rotate z * 45}
+<BR>pigment {BGNebula5 scale 2}
+<BR>pigment {BGNebula1 rotate &lt 60, 50, 0&gt}}
+
+<P>box {&lt -1, -1, -1&gt, &lt 1, 1, 1&gt
+<BR>pigment {BGStars6} finish {phong .5}}</CODE>
+
+<P>Note that setting <I>galaxy_declare_only</I> to true is the same as setting
+<A HREF="#galaxy_bgstars">galaxy_bgstars</A>, <A HREF="#galaxy_bgnebula">galaxy_bgnebula</A>, and <A HREF="#galaxy_nebula_sphere">galaxy_nebula_sphere</A> to false.
+
+
+<P><HR><A NAME="SF Options"></A>
+<B>GALAXY STARFIELD FILE OPTIONS</B>
+<HR>
+The options in this section apply to <I>Galaxy.sf</I>.  In addition to the
+options below, the Galaxy Starfield File supports the <A HREF="#galaxy_seed">galaxy_seed</A>,
+<A HREF="#galaxy_rotate">galaxy_rotate</A>, and <A HREF="#galaxy_origin">galaxy_origin</A> options, as detailed above.
+
+<P><A NAME="star_count"></A>
+<B>star_count</B>
+<HR>
+This option sets the number of star objects created.  The larger the number,
+the longer the parsing time and memory required.
+The default <I>star_count</I> value is 1000
+
+<P><A NAME="star_colour"></A>
+<B>star_colour</B>
+<HR>
+This option sets the RGB colour value of the stars.
+The default star_colour value is &lt 0.9, 0.9, 0.9&gt
+
+<P><A NAME="star_type"></A>
+<B>star_type</B>
+<HR>
+This option selects the pigment used on each star object.  Possible
+values are:
+
+<UL>1 - Plain circular star (default)
+<BR>2 - Circular star with halo
+<BR>3 - Circular star with six evenly spaced rays
+</UL>
+
+<P><A NAME="star_scale"></A>
+<B>star_scale</B>
+<HR>
+Use this option to increase or decrease the size of the star objects.  By
+default the stars are designed to look best when rendered at resolutions
+between 320x240 and 640x480; you may wish use smaller numbers for larger
+resolutions, and vice-versa.
+The default <I>star_scale</I> value is 1
+
+<P><A NAME="star_distance"></A>
+<B>star_distance</B>
+<HR>
+The star objects are arranged around a large sphere; this option sets the
+radius of this sphere.  The default value is 20000, which should be
+sufficient for most scenes and animations.  If the rest of the objects in
+your scene are this size or larger, you may need to increase this value.
+However, values that are too large may result in disappearing objects, or
+cause POV-Ray to crash when rendering the scene.
+
+<P><A NAME="star_spread"></A>
+<B>star_spread</B>
+<HR>
+This option sets the difference between the distances to the closest
+(largest) star and the farthest (smallest) star.  The option is expressed
+as a percentage of the <A HREF="#star_distance">star_distance</A>, eg: the default value of 1 means that
+the stars lie somewhere between 20000 and 40000 units away (40000 being
+equal to 20000 plus 20000 times 1).  Setting this option to 0 would result
+in all the star objects being the same distance from the origin.
+
+<P><A NAME="star_distribution"></A>
+<B>star_distribution</B>
+<HR>
+This option sets the ratio of large (close) stars to small (far) stars.
+The default value of 1 results in equal numbers of each.   Values larger
+than 1 give more large stars, while values smaller than 1 give more small
+stars.
+
+<P><A NAME="star_colour_turb"></A>
+<B>star_colour_turb</B>
+<HR>
+Use this option to alter the amount of colour variation between different
+stars.  Setting this option to 0 results in stars all of the same colour,
+while larger values give greater colour variation.
+The default <I>star_colour_turb</I> value is 0.2
+
+<P><A NAME="star_brightness_turb"></A>
+<B>star_brightness_turb</B>
+<HR>
+Use this option to set the amount of brightness variation between different
+stars.  Setting this option to 0 results in stars all of the same brightness,
+while larger values give greater brightness variation.
+The default <I>star_brightness_turb</I> value is 0.5
+
+
+<P><HR><A NAME="OBJ Options"></A>
+<B>GALAXY OBJECTS FILE OPTIONS</B>
+<HR>
+The options in this section apply to <I>Galaxy.obj</I>.  In addition to the
+options below, the Galaxy Objects File supports the following options
+detailed above:
+
+<UL><A HREF="#galaxy_seed">galaxy_seed</A>, <A HREF="#galaxy_colour_turb">galaxy_colour_turb</A>, <A HREF="#galaxy_intensity">galaxy_intensity</A>,
+   <A HREF="#galaxy_rotate">galaxy_rotate</A>, <A HREF="#galaxy_distance">galaxy_distance</A>, <A HREF="#galaxy_origin">galaxy_origin</A>
+   <A HREF="#galaxy_colour options">galaxy_colour1, galaxy_colour2, galaxy_colour3</A>, <A HREF="#galaxy_star_colouration">galaxy_star_colouration</A>,
+   <A HREF="#galaxy_pattern_scale">galaxy_pattern_scale</A>, <A HREF="#galaxy_pattern_origin">galaxy_pattern_origin</A>, <A HREF="#galaxy_turb_origin">galaxy_turb_origin</A>
+   </UL>
+   
+
+<P><A NAME="galaxy_object_name"></A>
+<B>galaxy_object_name</B>
+<HR>
+Use this option to select which galaxy object you wish to use.  Possible
+values are (the case of the strings is not important):
+
+<UL>Star1, Star2, Star3, Star4
+<BR>Nebula1, Nebula2, Nebula3, Nebula4, Nebula5, Nebula6
+<BR>Galaxy1, Galaxy2, Galaxy3, Galaxy4, Galaxy5
+<BR>Comet1, Comet2, Comet3
+<BR>Meteor1, Meteor2
+</UL>
+
+<P>As a shortcut you can just use the first and last letters of the object
+name, eg. S3 for Star3, or N4 for Nebula4.  If you don't want to create
+a galaxy object, set this value to an empty string.
+The default <I>galaxy_object_name</I> is Nebula1
+
+<P><A NAME="galaxy_object_scale"></A>
+<B>galaxy_object_scale</B>
+<HR>
+Use this option to increase of decrease the size of the galaxy object.
+The default <I>galaxy_object_scale</I> value is 1
+
+<P><A NAME="galaxy_object_rotate"></A>
+<B>galaxy_object_rotate</B>
+<HR>
+Use this option to rotate the galaxy object.  The object is rotated around
+the viewing axis, so only one float value is required.
+The default <I>galaxy_object_rotate</I> value is 0
+
+<P><A NAME="galaxy_object_flatten"></A>
+<B>galaxy_object_flatten</B>
+<HR>
+Use this option to flatten Galaxy, Comet, and Meteor objects.  Good values
+lie somewhere between 0 (no flattening) and 1 (completely flattened).  You
+can also use negative numbers to widen the object instead of thinning it.
+The default <I>galaxy_object_flatten</I> value is 0.2
+
+<P><A NAME="galaxy_object_position"></A>
+<B>galaxy_object_position</B>
+<HR>
+Use this option to move the galaxy object and cluster objects.  The
+x-component of this option specifies the altitude of the objects, while the
+y-component specifies the azimuth of the objects.  The z-component is
+ignored.  The default value of &lt 0, 0, 0&gt positions the objects directly
+perpendicular to the z-axis.  North lies along the z-axis and up lies along
+the y-axis.  Therefore, &lt 90, 0, 0&gt positions the object directly above the
+origin, and &lt-90, 0, 0&gt positions the objects below the origin.  &lt 0, 90, 0&gt
+positions the objects to the east (along the x-axis), &lt 0, -90, 0&gt positions
+the objects to the west (along the negative x-axis), and &lt 0, 180, 0&gt
+positions the objects to the south (along the negative z-axis).  You can
+combine these two movements using the <I>galaxy_object_position</I> value to place
+the galaxy object and cluster objects anywhere in the sky.
+
+<P><A NAME="galaxy_cluster_name"></A>
+<B>galaxy_cluster_name</B>
+<HR>
+In addition to a single galaxy object you can create a cluster of randomly
+positioned, sized, and coloured objects.  Use this option to select which
+object you wish to use for the cluster, using the same selection as
+the <A HREF="#galaxy_object_name">galaxy_object_name</A> option.  If you don't want to create
+a cluster of objects, set this option to an empty string.
+The default <I>galaxy_cluster_name</I> is Star1
+
+<P><A NAME="galaxy_cluster_objects"></A>
+<B>galaxy_cluster_objects</B>
+<HR>
+Use this option to set the number of objects you want to create in the
+cluster.  The default <I>galaxy_cluster_objects</I> value is 6
+
+<P><A NAME="galaxy_cluster_scale"></A>
+<B>galaxy_cluster_scale</B>
+<HR>
+Use this option to increase of decrease the size of the individual objects
+in the cluster (not the overall size of the cluster itself).  The default
+<I>galaxy_cluster_scale</I> value is half of the <A HREF="#galaxy_object_scale">galaxy_object_scale</A> value.
+
+<P><A NAME="galaxy_cluster_rotate"></A>
+<B>galaxy_cluster_rotate</B>
+<HR>
+Use this option to rotate each individual object in the cluster (not the
+cluster as a whole).  The default <I>galaxy_cluster_rotate</I> value is the same
+as the <A HREF="#galaxy_object_rotate">galaxy_object_rotate</A> value.
+
+<P><A NAME="galaxy_cluster_spread"></A>
+<B>galaxy_cluster_spread</B>
+<HR>
+Use this option to increase the amount of space between the individual
+cluster objects.  The option is expressed as an angle, where 0 results in
+all the objects being clustered at the same position, while 360 spreads the
+objects across the entire sky.
+The default <I>galaxy_cluster_spread</I> value is 15 degrees.
+
+<P><A NAME="galaxy_scale_turb"></A>
+<B>galaxy_scale_turb</B>
+<HR>
+Use this option to alter the amount of size variation between individual
+cluster objects.  Setting this option to 0 results in all the cluster
+objects being the same size, while larger values give greater size
+variation.  The default <I>galaxy_scale_turb</I> value is 0.5
+
+<P><A NAME="galaxy_rotate_turb"></A>
+<B>galaxy_rotate_turb</B>
+<HR>
+Use this option to alter the amount of variation (in degrees) between the
+rotations of individual cluster objects.  Setting this option to 0 results
+in all the cluster objects being rotated by the same amount, while setting
+this option to 360 gives objects rotated by completely random angles.
+The default <I>galaxy_rotate_turb</I> value is 0
+
+<P><A NAME="galaxy_declare_only"></A>
+<B>galaxy_declare_only</B>
+<HR>
+Setting this option to true stops <I>Galaxy.obj</I> from actually creating the
+galaxy object and cluster objects.  Instead, these objects are declared
+(as <CODE>galaxy_object</CODE> and <CODE>galaxy_cluster_object</CODE> respectively) as textured
+discs which can be used like any other object.  The discs are scaled
+and rotated according to the relevant options above, and are centred
+at the origin perpendicular to the z-axis.
+
+
+<P>
+<BR>
+<A NAME="Troubleshooting"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>TROUBLESHOOTING</B></I></FONT>
+</TD></TR></TABLE>
+This section contains some common problems you might encounter while using
+the Galaxy Include File package, and instructions on how to fix these
+problems.
+
+<P><HR>
+<B>Q) POV-Ray crashes when I try to render my galaxy scene?</B>
+<BR>A: This may be caused by objects being larger than POV-Ray's allowed limit.
+   To make the objects smaller, try decreasing the <A HREF="#galaxy_distance">galaxy_distance</A> value
+   (the default is 10000), and also the <A HREF="#star_distance">star_distance</A> value if you have
+   declared this separately.  If reducing this value doesn't help, try
+   reducing the <I>max_trace_level</I> of your scene; the Galaxy Include File
+   automatically increases the value for each object it creates, so add
+   the line:
+
+<P><CODE>global_settings {max_trace_level 10}</CODE>
+
+<P><B>after</B> including any of the <I>Galaxy.*</I> files.
+
+<P><HR>
+<B>Q) POV-Ray crashes before even starting to render my galaxy scene?</B>
+<BR>A: This is probably caused by a lack of memory; try decreasing your
+   <A HREF="#star_count">star_count</A> value, or your <A HREF="#galaxy_cluster_objects">galaxy_cluster_objects</A> value if they
+   are quite large.  Otherwise, check the error message POV-Ray gives
+   you; you have probably tried to redeclare an option that has
+   already been used by one of the Galaxy Include Files; ensuring that
+   options are always declared as the same type (eg. vectors are always
+   redeclared as vectors, etc.) should remove the problem.
+
+<P><HR>
+<B>Q) POV-Ray renders my galaxy scene, but it is very slow?</B>
+<BR>A: This is probably caused by very large objects; try reducing the
+   <A HREF="#galaxy_distance">galaxy_distance</A> and/or <A HREF="#star_distance">star_distance</A> options as detailed in the first
+   question.  Note, however, that when using many complex pigments like
+   those used by the Galaxy Include Files a certain amount of calculation
+   time is to be expected.
+
+<P><HR>
+<B>Q) I have created an animation using the Galaxy Include File, but the
+   stars seems to flicker annoyingly?</B>
+<BR>A: This is caused by using background stars (mapped to the sky_sphere)
+   which are only suitable for still scenes.  Try setting the
+   <A HREF="#galaxy_sky_sphere">galaxy_sky_sphere</A> option to false <B>before</B> including the <I>Galaxy.*</I> files
+   to remove the problem.
+
+<P><HR>
+<B>Q) I am using the <I>galaxy_pattern_origin</I> and/or <I>galaxy_turb_origin</I> options,
+   and there are some strange artefacts in my galaxy scene?</B>
+<BR>A: This is caused by problems with POV-Ray's internal pigment mapping
+   functions; you should be able to fix the problem by using smaller values
+   for the <A HREF="#galaxy_pattern_origin">galaxy_pattern_origin</A> and <A HREF="#galaxy_turb_origin">galaxy_turb_origin</A> options.
+
+<P><HR>
+<B>Q) I have tried declaring some of the options, but nothing changes?</B>
+<BR>A: Make sure that you have declared all the desired options <B>before</B>
+   including any of the <I>Galaxy.*</I> files.  The files are not designed
+   to be included once at the beginning of a scene.
+
+<P><HR>
+<B>Q) How can I use the Galaxy Include File with Moray (or another modeller)?</B>
+<BR>A: First export your scene from your modeller to a POV file.  Then just add
+   your desired galaxy options to this file, and include the desired
+   <I>Galaxy.*</I> files before rendering the scene.  If your modeller uses a
+   right handed coordinate system (like Moray) declare these two options
+   before any others to ensure that the galaxy objects are positioned
+   properly:
+
+<P><CODE>#declare galaxy_distance = &lt -1, 1, 1&gt * 10000;
+<BR>#declare galaxy_rotate = &lt -90, 180, 0&gt ;</CODE>
+
+<P><HR>
+<B>Q) I want to fly around a galaxy I have created, but this doesn't seem possible?</B>
+<BR>A: This is because the galaxy objects are designed to generally be viewed in the background, and so they are placed at a great distance from the other objects in a scene.
+You can, however, use any of the galaxy objects just as you would any other object in POV-Ray, so that it can translated, rotated, scaled, etc.
+Just use the <A HREF="#galaxy_declare_only">galaxy_declare_only</A> option to create the <CODE>galaxy_object</CODE>, eg:
+
+<P><CODE>#declare galaxy_colour1 = &lt 1.3, 1.2, .9&gt ;
+<BR>#declare galaxy_colour2 = &lt .4, .8, 1&gt ;
+<BR>#declare galaxy_cluster_name = ""
+
+<P>#declare galaxy_object_name = "Galaxy3"
+<BR>#declare galaxy_object_flatten = 0;
+<BR>#declare galaxy_declare_only = true;
+<BR>#include "Galaxy.obj"
+<BR>object {galaxy_object rotate x * 90 scale 10}
+
+<P>camera {location &lt 1, 2, -3&gt look_at &lt 0, .5, 0&gt}</CODE>
+
+<P><HR>
+<B>Q) I rendered my galaxy image using anti-aliasing and all the stars disappeared?</B>
+<BR>A: This is usually the result of using the <I>Galaxy.bg</I> file to create stars as a pigment on the sky_sphere.
+Stars created in this manner will not work well with anti-aliasing, and it is usually a good idea to set the <A HREF="#galaxy_bgstars">galaxy_bgstars</A> option to false to remove these background stars if you plan to render the image with anti-aliasing turned on.
+In their place, you should use the stars created by <I>Galaxy.sf</I>, as these are actual objects with pigments that have already been anti-aliased.
+The best settings for a scene usually depend on the rendering size, but for an 800x600 image these settings work quite well:
+
+<P><CODE>#declare star_count = 5000;
+<BR>#declare star_scale = .5;
+<BR>#include "Galaxy.sf"</CODE>
+
+<P><HR>
+<B>Q) I can't get media to work with the Galaxy Include Files?</B>
+<BR>A: Due to the way the Galaxy Include Files create the galaxy objects and stars, the results obtained using POV-Ray 3.1's media can be unpredictable.
+Part of the problem is caused by the galaxy objects usually being at a great distance from the other objects in a scene, which makes it very difficult for POV-Ray to calculate accurate media interactions.
+One solution is to decrease the <A HREF="#galaxy_distance">galaxy_distance</A> option to bring the galaxy objects closer to the camera, although this can make it difficult to place other objects correctly.
+A better solution might be to use localised media container objects, rather than atmospheric media, to only place the media in those sections of the scene that it is required for.
+This should give you more control over the media interactions in your scene, and possibly increase the rendering speed as well.
+
+
+<P>
+<BR>
+<A NAME="Legal"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>COPYRIGHT AND LEGAL INFORMATION</B></I></FONT>
+</TD></TR></TABLE>
+The <B>Galaxy Include File package</B>, including <I>Galaxy.inc</I>, <I>Galaxy.bg</I>, <I>Galaxy.obj</I>, <I>Galaxy.sf</I>, all documentation, and
+associated sample *.POV files are <B>Copyright 1998</B> by <B>Chris Colefax</B>.  Full
+permission is granted to the user to modify any or all of the files for
+his/her own use.  If modified versions are to be distributed the user
+should make clear the modifications that have been made by him/herself.
+
+<P>The <B>Galaxy Include File package</B> may be bundled with or without other
+software on CD-ROM collections, Bulletin Board systems and other file
+archives, providing that all associated files, including documentation and
+samples, are included.  I would also request that persons intending to
+distribute the <B>Galaxy Include File package</B> in this manner or otherwise
+would first <A HREF="#Contact">contact me</A> to ensure that
+they are in possession of the latest available version.
+
+<P>Further, no restrictions of any sort are placed on the usage of the include
+files themselves (<I>Galaxy.inc, Galaxy.bg, Galaxy.obj</I>, and <I>Galaxy.sf</I>), and scene files or images created using the include
+files remain entirely the property of the user or users who have created
+them.  I claim no liability or responsibility for damages or loss resulting
+from usage of the include files, or any part of the include file package.
+
+
+<P>
+<BR>
+<A NAME="Contact"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>CONTACTING THE AUTHOR</B></I></FONT>
+</TD></TR></TABLE>
+If you wish to contact me with bug reports, bug fixes, criticisms, 
+comments, suggested improvements, questions, etc. you can reach me by 
+email at:
+
+<P><A HREF="mailto:ccolefax@geocities.com">ccolefax@geocities.com</A>
+
+<P>or by regular mail at:
+
+<UL>Chris Colefax
+<BR>PO Box 110
+<BR>Kuranda, Queensland
+<BR>Australia  4872
+
+</UL>
+<HR>
+
+<DIV ALIGN=RIGHT><FONT SIZE=-1><I>
+POV-Ray<FONT SIZE=-2><SUP>TM</SUP></FONT> and Persistence of Vision<FONT SIZE=-2><SUP>TM</SUP></FONT> are registered trademarks of the POV-Ray Team<FONT SIZE=-2><SUP>TM</SUP></FONT>
+</I></FONT></DIV>
+
+</BODY></HTML>

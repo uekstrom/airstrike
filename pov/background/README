@@ -1,0 +1,9 @@
+pov/background
+
+This directory contains pov files for the background building
+blocks. No animation here, and one object per file only!  Alpha
+channel should be used for all image, and active use of transparency
+is encourage. Please test each object against a variety of background
+colors.
+
+Ulf

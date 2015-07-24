@@ -1,0 +1,470 @@
+#include "engine.h"
+#include "string.h"
+
+enum biplane_flags /* Different states the biplane can be in */
+  {
+    BIPLANE_ACCELERATING = 1,
+    BIPLANE_CRASHING = 2,
+    BIPLANE_UP = 4,
+    BIPLANE_DOWN = 8,
+    BIPLANE_INLOVE = 16
+  };
+
+/* how much bonuses give more stuff */
+#define FUEL_BONUS_AMOUNT 200
+#define BOMB_BONUS_COUNT  3
+
+/* what are the maximums, these could be also model specific... */
+#define FUEL_MAX_AMOUNT 1000
+#define BOMB_MAX_COUNT  12
+
+/* how often (in 10 ms) plane can do something */
+#define PLANE_SAY_DELAY 5
+#define PLANE_PUFF_DELAY 2
+
+typedef struct biplane_model
+{
+  /* some parameters we get from config files */
+  float engine_strength;
+  float turn_amount;
+  unsigned int bomb_delay;
+  unsigned int bullet_delay;
+  unsigned int hitpoints;
+  float mass;
+  float air_isotropic;
+  float air_turnrate;
+  float air_normal;  
+  unsigned int nr_bombs;
+  unsigned int fuel;
+
+  animation_t *right_anim;
+
+  struct biplane_model *crashing_model; /* Which model to switch to when the plane is out of hp */
+} biplane_model_t;
+
+static biplane_model_t red_baron_crashing = 
+{
+  .engine_strength = 0.0,
+  .turn_amount = 0.02,
+  .bomb_delay = 1200000,	/* N * 10ms */
+  .bullet_delay = 30000000,
+  .hitpoints = 0,
+  .mass = 1,
+  .air_isotropic = 0.0004,
+  .air_turnrate = 0.005,
+  .air_normal = 0.0,
+  .nr_bombs = 5,
+  .fuel = 0,
+};
+
+static biplane_model_t red_baron = 
+{
+  .engine_strength = 0.08,
+  .turn_amount = 0.05,
+  .bomb_delay = 12,	/* N * 10ms */
+  .bullet_delay = 3,
+  .hitpoints = 30,
+  .mass = 1,
+  .air_isotropic = 0.0004,
+  .air_turnrate = 0.005,
+  .air_normal = 0.01,
+  .nr_bombs = 5,
+  .fuel = 200,		/* puffs */
+  .crashing_model = &red_baron_crashing,
+};
+
+static biplane_model_t blue_duke_crashing = 
+{
+  .engine_strength = 0.0,
+  .turn_amount = 0.02,
+  .bomb_delay = 1200,	/* N * 10ms */
+  .bullet_delay = 3000,
+  .hitpoints = 30,
+  .mass = 1,
+  .air_isotropic = 0.0004,
+  .air_turnrate = 0.005,
+  .air_normal = 0.0,
+  .nr_bombs = 5,
+  .fuel = 200,		/* puffs */
+};
+
+static biplane_model_t blue_duke = 
+{
+  .engine_strength = 0.08,
+  .turn_amount = 0.05,
+  .bomb_delay = 12,	/* N * 10ms */
+  .bullet_delay = 3,
+  .hitpoints = 30,
+  .mass = 1,
+  .air_isotropic = 0.0004,
+  .air_turnrate = 0.005,
+  .air_normal = 0.01,
+  .nr_bombs = 5,
+  .fuel = 200,		/* puffs */
+  .crashing_model = &blue_duke_crashing,
+};
+
+
+struct biplane
+{
+  mech_sprite_t sprite; /* the biplane is also a mech sprite */
+  sprite_type_t *bullet_type;
+  unsigned int say_timer;
+  unsigned int gun_timer; /* keeps track of when it last fired */
+  unsigned int bomb_timer;
+  unsigned int puff_timer;
+  unsigned int nr_bombs;
+  unsigned int fuel;
+  struct ai *ai;
+  biplane_model_t *model;
+};
+
+static void crashing_trigger(void *sp)
+{
+  sprite_t *p, *s = sp;
+  vector_t v = { 0, -1 };
+  p = sprite_create(&blacksmoke);
+  sprite_set_pos(p, s->pos.x, s->pos.y);
+  p->vel = v;
+  create_effect(&fire, s->pos);
+}
+
+static int setup(void)
+{
+  red_baron.right_anim = animation_load("graphics/sprites/redplane.png",64,1,100);
+  red_baron_crashing.right_anim = animation_load("graphics/sprites/redplanewreck.png",64,1,180);
+  red_baron_crashing.right_anim->trigger = crashing_trigger;
+
+  blue_duke.right_anim = animation_load("graphics/sprites/blueplane.png",64,1,100);
+  blue_duke_crashing.right_anim = animation_load("graphics/sprites/blueplanewreck.png",64,1,180);
+  blue_duke_crashing.right_anim->trigger = crashing_trigger;
+
+  return 0;
+}
+
+static sprite_t *create(void)
+{
+  sprite_t *s;
+  struct biplane *bip;
+  bip = obj_alloc(sizeof(*bip),&biplane.object_type);
+  s = (sprite_t *)bip;
+
+  bip->model = &red_baron;
+
+  s->animation = bip->model->right_anim;
+  s->anim_p = 0;
+  s->flags |= SPRITE_CANROTATE;
+  mech_defaults((mech_sprite_t *)s);
+  bip->bullet_type = &bullet;
+  bip->nr_bombs = bip->model->nr_bombs;
+  bip->fuel = bip->model->fuel;
+
+  ((mech_sprite_t *)s)->rmass = 1/bip->model->mass;
+  ((mech_sprite_t *)s)->rinmom = 3;
+  ((mech_sprite_t *)s)->gravity = bip->model->mass;
+  ((mech_sprite_t *)s)->air_resistance = bip->model->air_isotropic;
+  ((mech_sprite_t *)s)->air_resistance_ang = 0;//air_turnrate;
+  ((mech_sprite_t *)s)->bounce = 0.2;
+
+  return s;
+}
+
+static void aerodynamics(struct biplane *p)
+{
+  float lift,attack;
+  vector_t vn;
+  /* Lift power is proportional to (v.n)^2*f(v x n),
+     where f is linear for small v x n,
+   */
+  vn = vnormalize2(p->sprite.sprite.vel);
+  attack = sin(M_PI*vcross(vn,mech_heading(&p->sprite)));
+  lift = sq(vdot(p->sprite.sprite.vel,mech_heading(&p->sprite)))*attack*0.1;
+  p->sprite.lin_impulse = vadd(p->sprite.lin_impulse,vmul(mech_right(&p->sprite),lift));
+
+  /* stabilizing force from air */
+  p->sprite.ang_impulse += vdot(vn,mech_heading(&p->sprite))*vcross(p->sprite.sprite.vel,mech_heading(&p->sprite))*0.01;
+
+};
+
+static void update(sprite_t *s)
+{
+  mech_sprite_t *ms = (mech_sprite_t *)s;
+
+  aerodynamics((struct biplane *)s);
+
+  if (!(s->state & BIPLANE_CRASHING))
+    {
+      if (ms->damage >= ((struct biplane *)s)->model->hitpoints)
+	{
+	  s->state |= BIPLANE_CRASHING;
+	  if (((struct biplane *)s)->model->crashing_model)
+	    {
+	      ((struct biplane *)s)->model = ((struct biplane *)s)->model->crashing_model;
+	      sprite_set_animation(s,((struct biplane *)s)->model->right_anim);
+	    }
+	  sprite_alarm(100,s,msg_kill());
+printf("DEBUG: ALARM kill biplane\n");
+	}
+    }
+  mech_update(ms);
+}
+
+static void plane_say(struct biplane *bip, const char *message)
+{
+  sprite_t *s = (sprite_t*)bip;
+  if (rate_limit(PLANE_SAY_DELAY, &bip->say_timer)) {
+     ui_message(message, s->pos.x - 20, s->pos.y - 20, tag_font, 2000);
+  }
+}
+
+static int handle_control(struct biplane *bip, int action)
+{
+  biplane_model_t *model = bip->model;
+  mech_sprite_t *ms = (mech_sprite_t *)bip;
+  sprite_t *s = (sprite_t*)bip;
+  sprite_t *p;
+  float head;
+
+  if (s->state & BIPLANE_CRASHING) 
+    {
+      /* cannot be controlled when crashing */
+      plane_say(bip, "Too late...");
+      return -1;
+    }
+
+  switch(action)
+    {      
+    case MSG_ACCELERATE:
+      if (bip->fuel > 0) {
+	s->state |= BIPLANE_ACCELERATING;
+	ms->lin_impulse = vmadd(ms->lin_impulse,mech_heading(ms),model->engine_strength);
+	if (rate_limit(PLANE_PUFF_DELAY, &bip->puff_timer)) {
+	  vector_t v = mech_global_pos(ms,vector(-10,0));
+	  if (ms->damage + 10 < bip->model->hitpoints) {
+	    create_effect(&puff, v);
+	  } else {
+	   create_effect(&blacksmoke, v);
+	  }
+	  /* less fuel each puff... */
+	  bip->fuel--;
+	}
+      } else {
+	plane_say(bip, "no fuel");
+      }
+      break;
+
+    case MSG_UP:
+      //ms->angle -= 2;
+      head = vdot(s->vel,mech_heading(ms));
+      if (head < 0.0) {
+	// turn faster when going backwards & turn same way as forward
+        ms->ang_vel += 2*model->turn_amount*head;
+      } else {
+        ms->ang_vel -= model->turn_amount*head;
+      }
+      s->state |= BIPLANE_UP;
+      s->state &= ~BIPLANE_DOWN;
+      break;
+
+    case MSG_DOWN:
+      //ms->angle += 2;
+      head = vdot(s->vel,mech_heading(ms));
+      if (head < 0.0) {
+	// turn faster when going backwards & turn same way as forward
+        ms->ang_vel -= 2*model->turn_amount*head;
+      } else {
+        ms->ang_vel += model->turn_amount*head;
+      }
+      s->state |= BIPLANE_DOWN;
+      s->state &= ~BIPLANE_UP;
+      break;
+
+    case MSG_FIRE: /* create bullet */
+      if (rate_limit(model->bullet_delay,&(bip->gun_timer)))
+	{
+	  if (s->state & BIPLANE_INLOVE) 
+	    {
+	      plane_say(bip, "Honey!");
+	    } 
+	  else 
+	    {
+	      sound_effect(&sound_gunfire, s->pos.x, s->pos.y);
+	      p = sprite_create(bip->bullet_type);
+	      p->pos = mech_global_pos(ms,vector(20,0));
+	      p->vel = vadd(s->vel, vmul(mech_heading(ms),5));
+	    }
+	}
+      break;
+
+    case MSG_DROP: /* create bomb */
+      if (rate_limit(model->bomb_delay,&bip->bomb_timer))
+	{
+	  if (bip->nr_bombs > 0)
+	    {
+	      sound_effect(&sound_bombdrop, s->pos.x, s->pos.y);
+	      bip->nr_bombs--;
+	      p = sprite_create(&bomb);
+	      ((mech_sprite_t *)p)->angle = ms->angle;
+	      mech_refresh_image((mech_sprite_t *)p);
+	      p->pos = mech_global_pos(ms,vector(-4,10));
+	      p->vel = vadd(s->vel, mech_heading(ms));
+	    }
+	  else
+	    {
+	      plane_say(bip, "no bombs");
+	    }
+	}
+      break;
+   }
+   return 0;
+}
+
+static enum msgret message(void *obj, msg_t msg)
+{
+  int res;
+  sprite_t *s = obj;
+  struct biplane *bip = (struct biplane *)s;
+  
+  if (bip->ai)
+    {
+      /* Let the ai listen to the signals */
+      res = bip->ai->intercept_msg(bip->ai,obj,msg);
+      if (res != MSG_RET_UNKNOWN && res != MSG_RET_CONT)
+	return res;
+    }
+  else
+    {
+      if (msg.type == MSG_CAN_HAVE_AI)
+	return MSG_RET_YES;
+      shell_print("NOTE: message %d to brainless plane\n",
+		  msg.type);
+    }
+
+  switch(msg.type)
+    {      
+    case MSG_UPDATE:
+      update(s);
+      break;
+
+    case MSG_IS_HARMLESS:
+      if (s->state & BIPLANE_CRASHING)
+	return MSG_RET_YES;
+      else
+	return MSG_RET_NO;
+      break;
+
+    case MSG_SET_DAMAGE:
+      {
+	char cb[10];
+	int damage = msg_get_damage(msg);
+	if (damage > 0)
+	  {
+	    ((mech_sprite_t *)s)->damage += damage;
+	    sprintf(cb,"-%i", damage);
+	    ui_message(cb, s->pos.x,s->pos.y, tag_font, 2000);
+	  }
+      }
+      break;
+
+    case MSG_ACCELERATE:
+    case MSG_UP:
+    case MSG_DOWN:
+    case MSG_FIRE:
+    case MSG_DROP:
+      if (handle_control(bip, msg.type))
+        /* sprite cannot be controlled ATM, i.e. message not handled */
+	return MSG_RET_UNKNOWN;
+      break;
+
+    case MSG_KILL:
+      create_effect(&explosion,s->pos);
+      global_aim_clear(s);
+      /* ai references biplane, so it has to be freed here otherwise
+       * you get a dangling circular refence and biplane gets never
+       * actually garbage collected
+       */
+      if (bip->ai)
+	bip->ai = obj_deref(bip->ai);
+      sprite_kill(s);
+printf("KILL biplane\n");
+      break;
+
+    case MSG_SET_AI:
+      if (bip->ai)
+	obj_deref(bip->ai);
+      bip->ai = obj_ref(msg_get_ai(msg),&ai_type);
+      break;
+
+    case MSG_ACCEPTS_BONUS:
+      /* accepts bonus attentions */
+      return MSG_RET_YES;
+
+    case MSG_SET_BONUS:
+      switch(msg_get_bonus(msg))
+        {
+	case BONUS_BOMB:
+	  bip->nr_bombs += BOMB_BONUS_COUNT;
+	  if (bip->nr_bombs > BOMB_MAX_COUNT)
+	    bip->nr_bombs = BOMB_MAX_COUNT;
+	  break;
+	case BONUS_FUEL:
+	  bip->fuel += FUEL_BONUS_AMOUNT;
+	  if (bip->fuel > FUEL_MAX_AMOUNT)
+	    bip->fuel = FUEL_MAX_AMOUNT;
+	  break;
+	case BONUS_PARACHUTE:
+#ifdef TODO
+	  /* handle the parachute jump bonus */
+#endif
+	  plane_say(bip, "Eject!");
+	  break;
+	default:
+	  return MSG_RET_UNKNOWN;
+        }
+      break;
+
+    case MSG_SET_VARIANT:
+      if (strcmp(msg_get_variant(msg),"red baron") == 0)
+	bip->model = &red_baron;
+      else if (strcmp(msg_get_variant(msg),"blue duke") == 0)
+	bip->model = &blue_duke;
+      else
+	{
+	  fprintf(stderr,"Unknown biplane model %s, quitting.\n",msg_get_variant(msg));
+	  exit(EXIT_FAILURE);
+	}
+      
+      /* Assume this signal is only given when the plane is not crashing, so we set
+	 the flying animation in all cases */
+      sprite_set_animation(s,bip->model->right_anim);      
+      break;
+
+    default:
+      return MSG_RET_UNKNOWN;
+      break;
+    }
+  return MSG_RET_ACK;
+}
+
+static void killbip(void *obj)
+{
+  struct biplane *bip = obj;
+  if (bip->ai)
+    bip->ai = obj_deref(bip->ai);
+printf("KILLED biplane / dereffed ai\n");
+}
+
+sprite_type_t biplane =
+  {
+    .object_type = {
+      .name = "biplane",
+      .message = message,
+      .base_type = &sprite_type,
+      .kill = killbip
+    },
+    .default_group = &mech_group,
+    .setup = setup,
+    .create_sprite = create,
+  };
+
+REGISTER_SPRITE_TYPE(biplane)

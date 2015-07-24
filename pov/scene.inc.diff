@@ -1,0 +1,14 @@
+--- pov/scene.inc.orig	Sun Jan  5 11:54:13 2003
++++ pov/scene.inc	Sun Jan  5 16:06:36 2003
+@@ -29,7 +29,11 @@
+ #include "textures.inc"
+ 
+ plane{<0,-1,0>,-100 texture{ Shadow_Clouds scale 20} } // sky plane
++#ifdef (SKY_ONLY)
++plane{<0,1,0>,-100 texture{ Shadow_Clouds scale 20} } // for reflective objects
++#else
+ plane{<0,1,0>,-100 texture{ Jade scale 20} } // ground plane
++#end
+ 
+ #macro dirty_color(col,clean)
+ 	pigment{ bozo color_map 

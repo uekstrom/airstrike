@@ -1,0 +1,24 @@
+Airstrike alpha 2
+
+Note that the game is not finished. You can fly around and shoot
+things, try out the physics engine etc, but the game is very
+repetitive. For installation instructions see INSTALL, for (a little)
+code documentation see doc/code.txt and doc/how-it-works.txt
+
+When in the game press ESC for a menu. The game should never crash. If
+it does then please send a gdb backtrace to uekstrom@gmail.com. You can
+check the debug output on stdout and stderr to see if there is a
+problem with the data files, or maybe some other error.
+
+There are a few user-configurable options in the file 'airstrikerc',
+see that file for more information. At the moment you must edit this
+file to turn on sound or to select graphics 'quality'.
+
+See NOTES for more release related info. For things that need to be
+done, see doc/TODO.
+
+You can help! If you are good at Povray, have some nice sound effects
+to contribute, like to write some (networking?) code or just have some
+ideas, please email uekstrom@gmail.com.
+
+--Ulf

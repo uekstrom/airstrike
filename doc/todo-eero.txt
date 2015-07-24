@@ -1,0 +1,182 @@
+
+TODO (goal oriented game play)
+====
+
+* Note: Sprite capabilities and attribute checks are handled with
+  messages (e.g. MSG_IS_WALKING). This is needed by triggers
+
+* Add to object type struct counters for how many objects (sprites) of the
+  given type have been created and killed (live = created - killed).
+  - Modify these counters when objects are created/killed
+  - TODO: Add clearing of these stats to and call that on level load or unload.
+
+* Add triggers:
+  - trigger <object tag1,tag2...> <event type> [options] [tag=<name>]
+  Sends activate message to the all given tagged objects when an event
+  of the given type happens.  Used to trigger generators, aims and other
+  triggers, or even individual tagged objects.
+
+  Object tag "level-done" is a special one for setting LEVEL_DONE flag
+  and tag "level-fail" for setting LEVEL_FAIL flag.  "level-winner" tag
+  is for setting the level "winner" member to the AI of the sprite that
+  completed the level (triggered level-end condition).
+  
+  Available event types and their options would be:
+  - playerdead <count>
+    - Activation happens when at least <count> players have been killed
+      (until they are dead)
+  - playeralive <count>
+    - Activation happens when only <count> players are alive
+  - random <min ms> <max ms> [count]
+    - Activation happens at random time interval until count reached
+  - spritekill <sprite type> <min kill count>
+  - spritecreate <sprite type> <min create count>
+    - Whether player or other objects have created/killed
+      enough of these types of objects
+  - spritealive <sprite type> <min count> <max count>
+    - Triggered if number of live (created-freed) sprites of given type
+      get into given range (or would out of range be better?)
+  - proximity <x> <y> <r> [above|below|left|right]
+    - If one of above|below|left|right is set, proximity is checked
+      only in that direction
+    - Sends MSG_SET_TARGET message for the found sprite to the tagged object
+      (not activate message)
+    - Needs to scan through all live sprites :-/
+  - aicontrol <ai> <tag>
+    - Used to check whether <ai> has gained control of a tagged object
+    - Basically checks which AI the tagged object has
+  - tagkill <tag>
+    - Used to check whether anything has killed tagged object
+
+* Implement global aim for objects and shell syntax:
+   - aim <name tag> <sprite type> <tag> [ai]
+   When this gets activate message, it makes sprites of given type to
+   follow the object with given tag. If 'ai' is set, objects should
+   use that instead of the default following AI.  Tag "NONE" can be
+   used (later) to clear the tag from aiming.
+   
+   This might be done e.g. by having the aim as additional information
+   in the sprite type structs:
+   struct {
+      sprite_type_t type;	/* current sprite type stuff */
+      int createcount;		/* how many created on this level */
+      int killcount;		/* how many killed on this level */
+      char *aim;		/* which tagged sprite to aim for, if set */
+      ai_t aim_ai;		/* AI to use in aiming, if set */
+   }
+
+* Add [generator|trigger|aim] activation and inactivation to the shell
+  as they are by default inactive:
+  - activate <generator|trigger|aim tag>
+  - inactivate <generator|trigger|aim tag>
+  With this it's even possible that another player starts later after
+  certain trigger (time, first player death, whatever)...
+  
+  An example level:
+  ---------------------------------------
+  level_name "Zeppelin birds"
+  description "Kill two zeppelins and then persist for 15 secs an assault of 
+the birds to finish the level"
+  # create two zeppelins to kill
+  sprite zeppelin 200 400
+  sprite zeppelin 600 400
+  # start generating birds and aiming them at player...
+  generator bird-generator bird 400 300 random 200 50
+  trigger bird-timer bird-generator timer 500 50
+  aim bird-aim bird p1plane
+  # ...and finish level in 15 secs...
+  trigger level-timer level-done timer 15000
+  # ...once the two zeppelins have been killed
+  trigger end-trigger bird-aim,bird-timer,level-timer,level-winner 
+spritekill zeppelin 2
+  activate end-trigger
+  # create player
+  generator player1 biplane 400 50 player 1 p1plane
+  activate player1
+  # level failure
+  trigger fail-trigger level-fail playeralive 0
+  --------------------------------------
+
+* Add possibility to hold objects and drop them. Then level end condition
+  triggering might require that user has fetched e.g. mail and delivered
+  it to a post box.
+
+* Add AI transfer from one object to another.  Requires that more
+  objects are properly controllable, rotate etc. Then end level condition
+  might require that user takes control over specific creature and flies
+  it to the "goal"
+  - This requires changing how objects are handled.  One needs to be
+    able to get e.g. AI from an object
+
+Others:
+* Fix sounds (see sound_fx.h)
+* Different looking and heading plane models
+* Make a new "zombie" AI that just follows an object
+  ("tag"ed eg. as "follow") using the updated
+  "mech_follow" function (give tag instead of an object)
+* "patrol" AI e.g. for zeppelin
+
+
+===================================================
+Done:
+
+* Others:
+  - Use fuel properly
+  - Add more text messages
+
+* Add generator objects:
+  - generator <generator type> <sprite type> <x> <y> <count>
+
+  When this gets activate message, it creates a sprite of the given
+  type to the x,y co-ordinates.  Same generator can get messages
+  from multiple triggers.
+
+  Available generator types and how the count option work:
+  - player <count>
+    - Assigns an AI given from Airstrike command line to the sprites:
+    	airstrike -level <nr> <ai-1> <ai-2> <ai-3> <etc>
+      First defined generator gets the first define AI etc
+    - Monitors the sprite and creates new one when old dies <count> times
+      - Whe activated, sets player# as alive on the level
+      - When <count> has finished, sets player# as dead for the level,
+        see "playerdead" and "playeralive" triggers
+  - singleton <count>
+    - Creates a new sprite once the old one has been killed, but does it
+      only for a <count> number of times.
+  - multi <count>
+    - Keeps always <count> objects of the given type alive. And starts
+      creating them immediately after being activated.
+
+  There are some optional parameters that can be given using the
+  following keywords:
+  - gentag=<name>
+    Tags the generator with the given name
+  - objtag=<name>
+    Tags the generated objects with the given name. Not valid for multi
+  - rx=<val> ry=<val>
+    The object creation happens at given random positive/negative offset
+  - vx=<val> vy=<val>
+    Horizontal and vertical speed for the object
+  - ai=<ai>
+    Sets the given AI for the objects. Not valid for players
+  - timeout=<milliseconds>
+    Waits until timeout before creating a new object
+
+* Add types to objects (by ulf):
+  - Member for the object type
+  - Parent link that points to parent object type
+  - Helper function that traverses the type tree to root and checks
+    whether object or it's parent type had requested type
+  - Cast macros for the base types: sprite|mech|trigger|generator|ai|aim
+    using the helper/traverse function. If cast macros are compiled
+    without debug, they do just casting, not the check
+  - Everywhere objects are cast, these macros are used
+
+* Get old features back to the biplane:
+  - Disable plane controlling once it's gotten too much damage
+    -> has actually another control model
+  - Kill plane after a while after it's gotten enough damage
+  - Add bonus for biplanes for getting more bombs
+
+* Make everything in Airstrike an object: ai, trigger, generator etc.
+

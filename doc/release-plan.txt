@@ -1,0 +1,116 @@
+Version 1.0
+===========
+
+Release date: start of 2004
+
+Focus: stabilized gameplay and game engine, a few playable levels
+
+Features:
+- two player multiplay
+- fairly good computer player for single player gaming
+- Levels:
+  - 3 different levels
+  - Each level is fullscreen
+  - Can have different size and wrap horizontally
+  - Can be compiled into Airstrike or be dynamically loaded modules
+- game engine:
+  - sprite engine:
+    - freely rotating rigid body code
+    - pixel perfect collisions
+    - signaling
+    - objects can regenerate themselves
+ - realistic plane aerodynamics
+    - wind according to object position + size
+  - ai can find enemies (long range + short range scanning)
+  - antialiasing
+- preliminary (positional) sound support
+- console mode for setting game options
+- damages and score keeping
+- objects:
+  - planes + firing + bombs
+  - bonus machine + bonus balloons
+  - cannon + cannon balls
+  - zeppelin + wreck
+  - hot-air balloon
+  - parachute man
+  - birds
+- bonuses:
+  - Bird/airballoon/zeppelin which follows the plane
+  - A new cloud in which you can hide
+- all graphics are raytraced
+- build system:
+  - automatic graphics generation from POV-models
+- documentation:
+  - textual code descriptions
+  - architecture diagram
+  - man page
+- windows version and rpm + deb packages
+
+Discarded features:
+- Larger than screen / scrolling levels. They were not very playable
+  in multiplay mode without split screen support
+- Tile based backgrounds. With single fullscreen background image it's
+  easier to implement background that you can damage
+
+
+Version 2.0
+===========
+
+Release date: End of 2004
+
+Focus: polishing v1 + level editor
+
+Considered features:
+- improvements:
+  - intro movie
+  - better sounds
+  - background music
+  - more objects and bonuses
+  - better sprites (images + finetuned behaviour)
+  - everything is configurable in config file and menus
+    - keybindings
+  - plane speed-vector is taken into account when applying wind
+  - code cleanup & optimization
+    - sprite group division
+    - player struct
+  - joystick support
+  - level change effects
+- level editor
+- teamplay and changable ai strategy:
+  - ai can change controller (hide-and-seek, angry) during game
+  - each object has attribute identifying which team/player it belongs
+    so that ai knows whom it should get angry at
+  - nature team and bonus that turns nature (e.g. balloons) against
+    you or the opponent
+- particle engine:
+  - sparks, fireworks, feathers?
+- New code features:
+  - random object generators
+- new objects:
+  - hangar
+  - ufo with comic aliens having deadly homing missiles
+  - the amazingly acrobatic bouncing hippo (bonus)
+  - Lizzie, the flying she-draco-queen
+  - spiked ball on a chain (weapon)
+  - air mines
+  - trees
+- code documentation with Doxygen?
+
+
+Version 3
+=========
+
+Focus: game engine can be used to do many different games
+
+Planned features:
+- Larger than screen levels with split screen play and scrolling
+- More levels / themes (e.g. day / night)
+- Task oriented play instead of dog-fight
+- Goal oriented ai strategies
+- OpenGL backend for zooming into action
+- More engine/library generalization
+- Engine ported to PyGame
+- Networked play, with server providing:
+  - level info and data set or their checksum
+    (collision masks have to match)
+  - random values & controller events from other players

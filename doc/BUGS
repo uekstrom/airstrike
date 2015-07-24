@@ -1,0 +1,12 @@
+
+Dragon wings are motion blurred even when gliding.
+
+Collision detection does not work very well when an object is
+completely inside another. The collision is detected, but there is no
+transfer of momentum etc. This is due to the lack of a suitable
+normal, but should be handled anyway.
+
+The collision routines makes object resting on the
+ground a bit shaky.
+
+No friction in collisions.

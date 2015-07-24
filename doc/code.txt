@@ -1,0 +1,15 @@
+Description of the various directories and files:
+
+doc/*: Documentation
+pov/*: Povray 3.5 model files. Should make by itself, 
+       but doesn't just yet.
+share/*: Datafiles for the game. At the moment most of these
+	come from the povray models in pov/.
+src/sprite/*: A basic sprite library used by the game
+src/support/*: Freestanding (or almost..) utility functions
+src/sprite_types/*: Definition of the different sprite types.
+		    These are picked up automagically by the 
+		    main Makefile.
+src/*: The game itself. These are the ugliest parts of the code.  
+
+The main Makefile is src/Makefile.

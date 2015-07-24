@@ -1,0 +1,75 @@
+/*************************************************************************
+           GALAXY STARFIELD FILE FOR PERSISTENCE OF VISION 3.x
+**************************************************************************
+
+Created by Chris Colefax, 1 February 1998
+Updated 9 August 1998: updated for POV-Ray 3.1
+
+See "Galaxy.htm" for more information.
+
+*************************************************************************/
+
+// CHECK VARIABLES AND ASSIGN DEFAULTS
+// ***********************************
+   #declare _SF_tempver = version; #version 3.0;
+   #ifndef (galaxy_seed) #declare galaxy_seed = 0; #end
+   #ifndef (star_count) #declare star_count = 1000; #end
+   #ifndef (star_type) #declare star_type = 1; #end
+   #ifndef (star_scale) #declare star_scale = 1; #end
+   #ifndef (star_spread) #declare star_spread = 1; #end
+   #ifndef (star_distribution) #declare star_distribution = 1; #end
+   #ifndef (star_brightness_turb) #declare star_brightness_turb = .5; #end
+   #ifndef (star_distance) #ifdef (galaxy_distance) #declare star_distance = galaxy_distance * 2;
+      #else #declare star_distance = 2e4; #end #end
+
+   #ifdef (star_colour) #declare _SF_colour = star_colour * <1, 1, 1>;
+      #else #ifdef (star_color) #declare _SF_colour = star_color * <1, 1, 1>;
+      #else #declare _SF_colour = <.9, .9, .9>; #end #end
+   #ifdef (star_colour_turb) #declare _SF_colourturb = star_colour_turb * <1, 1, 1>;
+      #else #ifdef (star_color_turb) #declare _SF_colourturb = star_color_turb * <1, 1, 1>;
+      #else #ifdef (_GX_colourturb) #declare _SF_colourturb = _GX_colourturb;
+      #else #declare _SF_colourturb = <.2, .2, .2>; #end #end #end
+
+// SELECT STAR PIGMENT
+// *******************
+   #switch (star_type)
+      #case (2) #declare _SF_starpigment = pigment {onion color_map {
+         [.3 rgb 1] [.8 rgbt 1] [.9 rgbt <1, 1, 1, .7>] [1 rgbt 1]}
+         scallop_wave scale 2}
+         #declare _SF_starobjscale = .015; #break
+      #case (3) #declare _SF_starpigment = pigment {onion pigment_map {
+         [.1 rgb 1]
+         [.4 average pigment_map {
+            [1 onion color_map {[.04 rgb 3] [.1 rgbt 1]} scale <10, 1, 1>]
+            [1 onion color_map {[.04 rgb 3] [.1 rgbt 1]} scale <10, 1, 1> rotate z * 120]
+            [1 onion color_map {[.04 rgb 3] [.1 rgbt 1]} scale <10, 1, 1> rotate z * 240]}
+            scale .5]}
+         scallop_wave scale 2}
+         #declare _SF_starobjscale = .025; #break
+      #else #declare _SF_starpigment = pigment {onion color_map {
+         [.3 rgb <1, 1, 1>] [1 rgbt <1, 1, 1, 1>]}}
+         #declare _SF_starobjscale = .01; #end
+
+   #declare _SF_starobject = triangle {<-1, -.6, 0>, <0, 1, 0>, <1, -.6, 0>
+      pigment {onion pigment_map {[.25 _SF_starpigment scale .25] [.25 rgbt <1, 1, 1, 1>]} scale 2}
+      finish {ambient 1 diffuse 0 reflection 0 phong 0 specular 0 crand 0}
+      scale star_scale * _SF_starobjscale}
+
+// CREATE STAR FIELD
+// *****************
+   #declare _SF_rand = seed(galaxy_seed);
+   #declare _SF_stars = union { #declare _SF_count = 0; #while (_SF_count < 50)
+      object {_SF_starobject
+         finish {ambient _SF_colour * (1 + (rand(_SF_rand) - .5) * star_brightness_turb * 2) * (1 + <rand(_SF_rand), rand(_SF_rand), rand(_SF_rand)> * _SF_colourturb)}
+         translate z * (1 + pow(rand(_SF_rand), star_distribution) * star_spread)
+         rotate <rand(_SF_rand), rand(_SF_rand), 0> * 360}
+   #declare _SF_count = _SF_count + 1; #end }
+
+   union { #declare _SF_count = 0; #while (_SF_count < star_count / 50)
+      object {_SF_stars rotate <rand(_SF_rand), rand(_SF_rand), 0> * 360}
+      #declare _SF_count = _SF_count + 1; #end
+      no_shadow hollow scale star_distance
+      #ifdef (galaxy_rotate) rotate galaxy_rotate #end
+      #ifdef (galaxy_origin) translate -galaxy_origin #end }
+
+   #version _SF_tempver;

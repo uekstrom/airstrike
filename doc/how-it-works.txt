@@ -1,0 +1,100 @@
+How the Airstrike engine works: An incomplete introduction.
+
+Sprites
+
+The basic building block of Airstrike is the sprite type
+'sprite_t'. Everything that moves, and some things that don't move, in
+the game are sprites. The sprites have some basic properties in
+common. They all have a position, a current animation, etc, but most
+importantly each sprite has a type, represented by the C type
+sprite_type_t. The type defines the behaviour of the sprite, and
+supplies is with animations etc. In C++ sprite_type_t would be the
+class, and sprite_t would be a general instance of this class. The
+sprite type, accessible via the .type member of sprite_t, defines how
+to create a sprite, what will happen if there is a collision with
+other sprites etc.
+
+Signals
+
+The sprite type also defines how the sprite will react to
+/signals/. The signal mechanism is used to communicate with the
+sprites in a uniform manner without knowing their exact types. Each
+sprite type may choose to catch any signals it likes, but there is
+never any guarantee that the signal will be caught. This mechanism is
+use to signal damage done to a sprite, for example. Only the
+'important' sprites actually keep track of their internal damage, but
+the signal can be sent to any sprite in a safe way. The signals can be
+sent after some time, using the sprite_alarm() function. This is used
+for example to let the crashed biplanes remain for a certain time in
+the game before they are removed. In practice the signal system is
+also used to prevent excessive castings between the different type,
+and will hopefully be used to do network transparent communications in
+the future.
+
+Sprite groups
+
+Despite the niceness and generality of of the signal mechanism it is
+often convenient to keep separate types of sprites in different
+groups. This simplifies things, and minimizes unneccessary
+communication and collision detection. The C type sprite_group_t is
+used for this purpose. The groups are used for all major operations,
+like drawing and collision detection.
+
+Sprite reference counting
+
+Because pointers to individual sprites can be stored in many unlikely
+places, there is a reference counting mechanism to keep track of the
+sprites. When the reference count drops to zero the sprite is
+freed. This makes it very important to use sprite_aquire(),
+sprite_isvalid() and sprite_release() correctly. A sprite may be
+marked as dead using the sprit_kill() function, which means that is
+should be released by everyone that references it. This is done
+automatically when using sprite_isvalid() before accessing the
+sprite. See the code in sprite_types/biplane.c for an example of how
+to use these functions.
+
+Sprite type coding
+
+To create a new sprite type you should: 
+1) Make graphics for all its actions, add the pov files to the 
+   pov directory, with the corresponding makefile targets.  
+   See doc/animation.txt for some info about how to make animations.
+2) Make sounds for it if needed.  
+3) Code the behavior by creating a sprite_type_t struct for the new
+   type. Be sure to use the REGISTER_SPRITE_TYPE() macro, and place 
+   your code in a suitably named C file in the sprite_types directory. 
+   It will be picked up automatically by the makefile.  
+4) Implement some way for the sprite to appear in the game.
+
+Mechanics and dynamics
+
+The basic sprite_t function keeps track of position and velocity. For
+nice mechanics it is neccessary to have more properties, and there is
+a 'subclass' of sprite_t called mech_sprite_t, which have a lot of
+physical properties. The interaction between sprites of this type are
+handled 'automatically', and damage is distributed if impact
+velocities are too high. These sprites inevitably take up more memory
+and CPU, and they should only be used where accurate physics is
+important. In the current game this type is used for the biplanes, the
+balloons and the bombs. The functions for handling mechanics are
+located in mech.c, with support from support/maths.[hc]. The mechanics
+are far from done, and may do strange things in certain
+situations. The properties in mech_sprite_t are not all implemented,
+so beware! (and check the code).
+
+Game levels
+
+The level support is currently in its early stages, so currently there
+can only be levels of the same size as the display. In addition to the
+background image there is a special image which controlls the mask
+used for collision detection with the background. This is generally
+needed as the engine cannot know which parts of the background image
+belongs to the foreground. Alternatively the alpha channel could be
+used, but this makes things more complicated with Povray, for example.
+In the future the levels are going to be made up of separate elements
+and will possibly be larger than the screen. This is because it is not
+optimal to have a very large level in a single {sw|hw} surface. At this
+point there will also be a level editor.
+
+  --Ulf
+

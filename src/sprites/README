@@ -1,0 +1,9 @@
+This directory contains the definitions for each sprite type.
+Guidelines:
+Each type should fit completely in a single source file. Use
+struct mysprite{ sprite_t base; .. } for extending the sprite types.
+
+If your sprite holds a pointer to another sprite it _must_ reference it
+using sprite_aquire(), and check if is alive before working on it by
+using the sprite_isvalid() function.
+

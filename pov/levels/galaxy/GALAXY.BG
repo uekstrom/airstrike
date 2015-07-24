@@ -1,0 +1,180 @@
+/*************************************************************************
+          GALAXY BACKGROUNDS FILE FOR PERSISTENCE OF VISION 3.x
+**************************************************************************
+
+Created by Chris Colefax, 1 February 1998
+Updated 9 August 1998: updated for POV-Ray 3.1
+
+See "Galaxy.htm" for more information.
+
+*************************************************************************/
+
+// CHECK VARIABLES AND ASSIGN DEFAULTS
+// ***********************************
+   #declare _GX_bgtempver = version; #version 3.0;
+   #ifndef (galaxy_declare_only) #declare galaxy_declare_only = false; #end
+   #ifndef (galaxy_bgstars) #declare galaxy_bgstars = 2; #end
+   #ifndef (galaxy_bgnebula) #declare galaxy_bgnebula = 6; #end
+   #ifndef (galaxy_nebula_sphere) #declare galaxy_nebula_sphere = 1; #end
+   #ifndef (galaxy_nebula_ambient) #declare _GX_nebambient = <1, 1, 1>; #else #declare _GX_nebambient = galaxy_nebula_ambient * <1, 1, 1>; #end
+   #ifndef (galaxy_distance) #declare galaxy_distance = 1e4; #end
+   #ifndef (galaxy_pattern_scale) #declare galaxy_pattern_scale = 1; #end
+   #ifndef (galaxy_pattern_origin) #declare galaxy_pattern_origin = <0, 0, 0>; #end
+   #ifndef (galaxy_turb_origin) #declare galaxy_turb_origin = <0, 0, 0>; #end
+   #ifndef (galaxy_intensity) #declare galaxy_intensity = 1; #end
+
+   #ifdef (galaxy_colour1) #declare _GX_colour1 = galaxy_colour1 * <1, 1, 1>;
+      #else #ifdef (galaxy_color1) #declare _GX_colour1 = galaxy_color1 * <1, 1, 1>;
+      #else #declare _GX_colour1 = <1, 1, 1>; #end #end
+   #ifdef (galaxy_colour2) #declare _GX_colour2 = galaxy_colour2 * <1, 1, 1>;
+      #else #ifdef (galaxy_color2) #declare _GX_colour2 = galaxy_color2 * <1, 1, 1>;
+      #else #declare _GX_colour2 = _GX_colour1 - .3; #end #end
+   #ifdef (galaxy_colour3) #declare _GX_colour3 = galaxy_colour3 * <1, 1, 1>;
+      #else #ifdef (galaxy_color3) #declare _GX_colour3 = galaxy_color3 * <1, 1, 1>;
+      #else #declare _GX_colour3 = (_GX_colour1 + _GX_colour2) / 2; #end #end
+   #ifdef (galaxy_star_colouration) #declare _GX_starcolouration = galaxy_star_colouration;
+      #else #ifdef (galaxy_star_coloration) #declare _GX_starcolouration = galaxy_star_coloration;
+      #else #declare _GX_starcolouration = .2; #end #end
+
+   #declare _GX_finaltranslate = galaxy_turb_origin - galaxy_pattern_origin;
+   #ifndef (_GX_tracelevel) #declare _GX_tracelevel = 5; #end
+
+// CALCULATE STAR COLOURS
+// **********************
+   #if (_GX_starcolouration = 1)
+      #declare _GX_starcolour1 = _GX_colour1;
+      #declare _GX_starcolour2 = _GX_colour2;
+      #declare _GX_starcolour3 = _GX_colour3;
+   #else
+      #declare _GX_tempfloat1 = max(_GX_colour1.x, _GX_colour1.y); #declare _GX_tempfloat1 = max(_GX_tempfloat1, _GX_colour1.z);
+      #declare _GX_tempfloat2 = min(_GX_colour1.x, _GX_colour1.y); #declare _GX_tempfloat2 = min(_GX_tempfloat2, _GX_colour1.z);
+      #declare _GX_tempfloat1 = (_GX_tempfloat1 + _GX_tempfloat2) / 2; #declare _GX_starcolour1 = _GX_tempfloat1 + (_GX_colour1 - _GX_tempfloat1) * _GX_starcolouration;
+
+      #declare _GX_tempfloat1 = max(_GX_colour2.x, _GX_colour2.y); #declare _GX_tempfloat1 = max(_GX_tempfloat1, _GX_colour2.z);
+      #declare _GX_tempfloat2 = min(_GX_colour2.x, _GX_colour2.y); #declare _GX_tempfloat2 = min(_GX_tempfloat2, _GX_colour2.z);
+      #declare _GX_tempfloat1 = (_GX_tempfloat1 + _GX_tempfloat2) / 2; #declare _GX_starcolour2 = _GX_tempfloat1 + (_GX_colour2 - _GX_tempfloat1) * _GX_starcolouration;
+
+      #declare _GX_tempfloat1 = max(_GX_colour3.x, _GX_colour3.y); #declare _GX_tempfloat1 = max(_GX_tempfloat1, _GX_colour3.z);
+      #declare _GX_tempfloat2 = min(_GX_colour3.x, _GX_colour3.y); #declare _GX_tempfloat2 = min(_GX_tempfloat2, _GX_colour3.z);
+      #declare _GX_tempfloat1 = (_GX_tempfloat1 + _GX_tempfloat2) / 2; #declare _GX_starcolour3 = _GX_tempfloat1 + (_GX_colour3 - _GX_tempfloat1) * _GX_starcolouration;
+   #end
+
+// CREATE STAR PIGMENTS
+// ********************
+   #declare BGStars1 = pigment {leopard color_map {
+      [.6 rgb 0] [.9 rgb _GX_starcolour2 * .1] [.98 rgb _GX_starcolour3 * .4] [1 rgb _GX_starcolour1 * galaxy_intensity]}
+      scale 1e-15 translate -galaxy_pattern_origin}
+
+   #declare BGStars2 = pigment {leopard color_map {
+      [.4 rgb 0] [.75 rgb _GX_starcolour2 * .2] [.95 rgb _GX_starcolour3 * .5] [1 rgb _GX_starcolour1 * galaxy_intensity]}
+      scale 1e-15 translate -galaxy_pattern_origin}
+
+   #declare BGStars3 = pigment {leopard color_map {
+      [.1 rgb 0] [.5 rgb _GX_starcolour2 * .3] [.85 rgb _GX_starcolour3 * .6] [1 rgb _GX_starcolour1 * galaxy_intensity]}
+      scale 1e-15 translate -galaxy_pattern_origin}
+
+   #declare BGStars4 = pigment {leopard color_map {
+      [.97 rgb 0] [.975 rgb _GX_starcolour2 * galaxy_intensity]
+      [.98 rgb 0] [.985 rgb _GX_starcolour3 * galaxy_intensity]
+      [.99 rgb 0] [1 rgb _GX_starcolour1 * galaxy_intensity]}
+      scale 1e-15 translate -galaxy_pattern_origin}
+
+   #declare BGStars5 = pigment {leopard color_map {
+      [.85 rgb 0] [.87 rgb _GX_starcolour2 * galaxy_intensity]
+      [.89 rgb 0] [.92 rgb _GX_starcolour3 * galaxy_intensity]
+      [.95 rgb 0] [1 rgb _GX_starcolour1 * galaxy_intensity]}
+      scale 1e-15 translate -galaxy_pattern_origin}
+
+   #declare BGStars6 = pigment {leopard color_map {
+      [.7 rgb 0] [.75 rgb _GX_starcolour2 * 1.5 * galaxy_intensity]
+      [.8 rgb 0] [.85 rgb _GX_starcolour3 * 1.5 * galaxy_intensity]
+      [.9 rgb 0] [1 rgb _GX_starcolour1 * 1.5 * galaxy_intensity]}
+      scale 1e-15 translate -galaxy_pattern_origin}
+
+   #declare BGMilkyWay = pigment {gradient y pigment_map {
+      [.03 granite color_map {[.1 rgb _GX_starcolour3 transmit pow(.9, galaxy_intensity)] [.8 rgb _GX_starcolour1 transmit pow(.7, galaxy_intensity)]} scale .8 * galaxy_pattern_scale translate -galaxy_pattern_origin]
+      [.08 granite color_map {[.4 rgb _GX_starcolour2 transmit 1] [1 rgb _GX_starcolour3 transmit pow(.8, galaxy_intensity)]} scale .6 * galaxy_pattern_scale translate -galaxy_pattern_origin]
+      [.1 rgb _GX_starcolour2 transmit 1]}
+      scale 3
+      translate -galaxy_turb_origin warp {turbulence .3 octaves 4 lambda 3} translate galaxy_turb_origin}
+
+// CREATE NEBULAE PIGMENTS
+// ***********************
+   #declare BGNebula1 = pigment {bozo pigment_map {
+      [-.3 granite color_map {[0 rgb _GX_colour1 transmit pow(.1, galaxy_intensity)] [1 rgb _GX_colour1 transmit pow(.6, galaxy_intensity)]} scale 6 * galaxy_pattern_scale]
+      [.4 granite color_map {[0 rgb _GX_colour3 transmit pow(.6, galaxy_intensity)] [.5 rgb _GX_colour2 transmit pow(.95, galaxy_intensity)]} scale 3 * galaxy_pattern_scale]
+      [.9 rgb _GX_colour2 transmit 1]}
+      scale .3
+      translate -galaxy_turb_origin warp {turbulence .18 octaves 4 omega .4 lambda 3} translate _GX_finaltranslate}
+
+   #declare BGNebula2 = pigment {bozo pigment_map {
+      [-.3 wrinkles color_map {[0 rgb _GX_colour1 transmit pow(.1, galaxy_intensity)] [1 rgb _GX_colour3 transmit pow(.6, galaxy_intensity)]}
+         warp {turbulence 2 octaves 1} scale 1.5 * galaxy_pattern_scale]
+      [.4 wrinkles color_map {[0 rgb _GX_colour3 transmit pow(.5, galaxy_intensity)] [.5 rgb _GX_colour2 transmit pow(.9, galaxy_intensity)]}
+         warp {turbulence 1 octaves 1} scale galaxy_pattern_scale]
+      [.7 rgb _GX_colour2 transmit 1]}
+      scale .3
+      translate -galaxy_turb_origin warp {turbulence .15 octaves 2 lambda 4} translate _GX_finaltranslate}
+
+   #declare BGNebula3 = pigment {leopard pigment_map {
+      [-.1 rgbt _GX_colour2 transmit 1]
+      [.4 wrinkles color_map {[0 rgb _GX_colour2 transmit 1] [1 rgb _GX_colour3 transmit pow(.6, galaxy_intensity)]}
+         scale .8 * galaxy_pattern_scale translate -galaxy_turb_origin]
+      [1 granite color_map {[.05 rgb _GX_colour3 transmit 1] [.3 rgb _GX_colour1 transmit pow(.1, galaxy_intensity)]}
+         scale 6 * galaxy_pattern_scale translate galaxy_turb_origin]}
+      scale .13
+      translate -galaxy_turb_origin warp {turbulence .3 octaves 4 lambda 3 omega .4} translate _GX_finaltranslate}
+
+   #declare BGNebula4 = pigment {bozo pigment_map {
+      [0 granite color_map {[0 rgb _GX_colour1 transmit pow(.4, galaxy_intensity)] [1 rgb _GX_colour3 transmit pow(.95, galaxy_intensity)]} scale 2 * galaxy_pattern_scale]
+      [.6 granite color_map {[0 rgb _GX_colour3 transmit pow(.6, galaxy_intensity)] [.4 rgb _GX_colour2 transmit 1]} scale 1.7 * galaxy_pattern_scale]
+      [.9 rgb _GX_colour2 transmit 1]}
+      scale .3
+      translate -galaxy_turb_origin warp {turbulence .5 octaves 4 omega .4 lambda 3} translate _GX_finaltranslate}
+
+   #declare BGNebula5 = pigment {bozo pigment_map {
+      [-.1 wrinkles color_map {[.1 rgb _GX_colour2 transmit 1] [.4 rgb _GX_colour3 transmit pow(.5, galaxy_intensity)] [.8 rgb _GX_colour1 transmit pow(.1, galaxy_intensity)]} scale .3 * galaxy_pattern_scale]
+      [.4 wrinkles color_map {[.5 rgb _GX_colour2 transmit 1] [1 rgb _GX_colour3 transmit pow(.4, galaxy_intensity)]} scale .3 * galaxy_pattern_scale]
+      [.6 rgb _GX_colour2 transmit 1]}
+      scale .22
+      translate -galaxy_turb_origin warp {turbulence .2 octaves 4 omega .3 lambda 5} translate _GX_finaltranslate}
+
+// CREATE GALAXY BACKGROUND (SKYSPHERE)
+// ************************************
+   #if (galaxy_declare_only = false)
+      #ifndef (galaxy_sky_sphere) #if (galaxy_bgstars != false | galaxy_bgnebula != false)
+      sky_sphere {
+         #if (galaxy_bgstars != false) pigment { #switch (abs(int(galaxy_bgstars)))
+            #case (1) BGStars1 #break #case (3) BGStars3 #break #case (4) BGStars4 #break
+            #case (5) BGStars5 #break #case (6) BGStars6 #break #else BGStars2 #end }
+         #end
+         #if (galaxy_bgnebula != false) pigment { #switch (abs(int(galaxy_bgnebula)))
+            #case (1) BGNebula1 #break #case (2) BGNebula2 #break #case (3) BGNebula3 #break
+            #case (4) BGNebula4 #break #case (5) BGNebula5 #break #else BGMilkyWay #end
+            #ifdef (galaxy_rotate) rotate galaxy_rotate #end }
+         #end
+         }
+      #declare galaxy_sky_sphere = false;
+      #declare galaxy_bgstars = false;
+      #declare galaxy_bgnebula = false;
+
+// CREATE DUMMY OBJECT (TO PREVENT "No objects in scene" ERROR)
+// ************************************************************
+   #if (galaxy_nebula_sphere = false) sphere {<0, 0, 0>, 0 pigment {rgb <0, 0, 0>}} #end
+   #end #end
+
+// CREATE NEBULA SPHERE
+// ********************
+   #if (galaxy_nebula_sphere != false) sphere {<0, 0, 0>, 1
+      pigment { #switch (abs(int(galaxy_nebula_sphere)))
+         #case (2) BGNebula2 #break #case (3) BGNebula3 #break #case (4) BGNebula4 #break
+         #case (5) BGNebula5 #break #else BGNebula1 #end
+         translate -galaxy_pattern_origin}
+      finish {ambient _GX_nebambient diffuse 0 reflection 0 phong 0 specular 0 crand 0}
+      no_shadow hollow scale galaxy_distance
+      #ifdef (galaxy_rotate) rotate galaxy_rotate #end
+      #ifdef (galaxy_origin) translate -galaxy_origin #end }
+      #declare galaxy_distance = galaxy_distance * 1.001;
+      #declare _GX_tracelevel = _GX_tracelevel + 1;
+      global_settings {max_trace_level min(_GX_tracelevel, 30)}
+   #end #end #version _GX_bgtempver;

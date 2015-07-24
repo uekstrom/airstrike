@@ -1,0 +1,44 @@
+
+Level files
+===========
+
+Here are level background POV scene files.
+By default the backgrounds are made to 800x600 size.
+
+Files for each level are:
+- <name>.pov       -- POV source file for <name> level background
+- <name>.png       -- rendered level background
+- <name>-mask.png  -- rendered level background mask
+
+All the background objects in the POV files which
+shouldn't affect the sprites, should be enclosed into:
+--------------
+#ifndef(MASK)
+background { color rgb<0.8,0.75,1.0> }
+#end
+--------------
+
+This way both the background and it's mask PNG files can be
+created *automatically* from the same POV file.
+
+Background shouldn't have any completely black objects.
+
+
+Level directories
+=================
+
+From the level files here is created a directory structure like this:
+<level-nro>/
+- bg.jpg
+- mask.png
+- thumb.png
+
+Where each <name> is mapped to certain <level-nro> in the Makefile.
+
+
+In addition these are required for level to be complete
+- description.txt  -- describes the level to the user
+- settings         -- tells airstrike what objects the level has and where
+
+
+	- Eero

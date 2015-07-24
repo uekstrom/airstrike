@@ -1,0 +1,4 @@
+The core module takes care of most IO and all basic graphics and sound
+operations. It also has the most simple sprite functions, drawing and
+collision detection. It shouldn't contain anything Airstrike-
+specific.

@@ -1,0 +1,108 @@
+.TH AIRSTRIKE 6 "Version 1.0" Airstrike GAMES
+
+.nf
+            _    _          _        _ _        
+           / \\  (_)_ __ ___| |_ _ __(_) | _____ 
+          / _ \\ | | '__/ __| __| '__| | |/ / _ \\
+         / ___ \\| | |  \\__ \\ |_| |  | |   <  __/
+        /_/   \\_\\_|_|  |___/\\__|_|  |_|_|\\_\\___|
+.fi
+
+.SH NAME
+
+airstrike \- 2d dogfight game in the tradition of 'Biplanes' and 'BIP'
+
+.SH DESCRIPTION
+
+Airstrike is a 2d biplane dogfight game in the tradition of the
+Intellivision and Amiga games 'Biplanes' and 'BIP'. It features a
+robust physics engine and several other extensions of the original
+games.
+
+
+.SH SYNOPSIS
+
+.B airstrike
+.I [options]
+
+
+.SH OPTIONS
+
+Airstrike reads all the configuration options from a configuration
+file at startup but you can override from command line a few of the
+options:
+.TP
+.B --fullscreen
+Runs the game in fullscreen mode.
+.TP
+.B --sound
+Runs game with sound effects, if support for that has been compiled in.
+.TP
+.B --nosound
+Runs the game without sound.
+.TP
+.B --noalpha
+Game graphics will not be antialiased. This makes it run faster.
+.TP
+.B --alpha
+Game graphics will be antialiased.
+.TP
+.B --config CONFIGFILE
+Use given configuration file instead of the one which location is
+compiled into Airstrike.
+.PP
+Configuration file name is '.airstrikerc' and it's located in your
+home directory.
+
+
+.SH CONTROLS
+
+Airstrike is controlled from keyboard:
+.TP
+.B RIGHT
+Plane nose goes up.
+.TP
+.B LEFT
+Plane nose goes down.
+.TP
+.B COMMA
+Accelerate.
+.TP
+.B DOT
+Shoot.
+.TP
+.B SPACE
+Drop a bomb.
+.TP
+.B ESC
+Pause game and open game options menu. From menu you can change
+options, view release notes and quit it.
+
+
+.SH LICENCE
+
+This is free software; you can redistribute it and/or modify it
+under the terms specified in the GNU Public Licence (GPL).
+
+
+.SH WARRANTY
+
+None.
+
+
+.SH COPYRIGHT AND CREDITS
+
+.TP
+.B Ulf Ekström
+Game author, programming and graphics
+.TP
+.B Peter Eismann
+Windows port, comments and ideas
+.TP
+.B Eero Tamminen
+Sound, graphics, game objects, makefiles, comments and ideas
+.TP
+.B Alessandro Giusti
+Graphics and ideas
+.PP
+And many others for comments, bug reports and ideas.

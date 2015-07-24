@@ -1,0 +1,6 @@
+Just some points for understanding the code:
+
+* All sprites are reference counted. This means that you must use the
+  apropriate functions when storing a pointer to a sprite. See
+  sprite_aquire() and sprite_isvalid() for more information.
+

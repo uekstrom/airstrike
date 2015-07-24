@@ -1,0 +1,38 @@
+level_name "Two brick platforms"
+gravity 0.1
+bounce 0.5
+
+# hot air-balloon
+sprite airballoon 400 200 tag=balloon
+
+# one hippotamus
+sprite hippo 400 50
+
+# players: sprite x y lives [keys]
+generator player biplane 200 250 3 objtag=p1plane
+generator player biplane 600 250 3 objtag=p2plane
+
+# fuel at 5 sec intervals, five barrels total
+generator singleton fuel 200 380 5 timeout=50
+generator singleton fuel 600 380 5 timeout=50
+
+# bottom penguins appear when player takes fuel first time
+generator singleton pingu 200 400 1  vx=1 gentag=p1gen objtag=p1pingu active=0
+generator singleton pingu 600 400 1 vx=-1 gentag=p2gen objtag=p2pingu active=0
+trigger p1gen proximity 200 380 20 o p1plane
+trigger p2gen proximity 600 380 20 o p2plane
+
+# game ends when pingu is above corresponding platform
+trigger level-done proximity 200 250 50 o p1pingu "msg=Pingu came home"
+trigger level-done proximity 600 250 50 o p2pingu "msg=Pingu came home"
+
+# boxes come when balloon is killed
+generator multi box 100 50 99 gentag=box1gen timeout=40 active=0
+generator multi box 700 50 99 gentag=box2gen timeout=40 active=0
+trigger box1gen,box2gen tagkill balloon
+
+# level restarts if no player is alive or at least one has died
+trigger level-restart player 0 1 "msg=Player died..."
+
+# what to do
+level_description "Get the fuel beneath your platform.\nManeuver your penguin above your platform."

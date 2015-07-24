@@ -1,0 +1,67 @@
+
+BONUSES
+=======
+
+"Bonus machine" at the top of the screen creates a new balloon every
+30secs.  When balloon is "popped", you see stars and after 1 sec, a
+random bonus appears in middle of them. Bonus goes away after a little
+while.
+
+This are the bonuses:
+
+Airballoon
+  Airballoon starts to follow the plane until plane
+  is killed or plane grabs same bonus again.
+  (eero)
+
+Bird
+  The leader bird follows the plane until plane dies.
+  (eero)
+
+Bomb
+  Player gets one (or two) more bomb.
+  (eero)
+
+Cloud
+  Cloud appears from either side of the screen and disappears when
+  it floats off the other side.
+  (eero)
+
+Heart
+  Computer plane stops shooting the player and just chases his/her
+  plane, trailing hearts, until player's plane dies or 15 sec has
+  expired, whichever happens first.
+  (TODO, doens't work anymore)
+
+Parachute
+  Pilot gets a claustrofobic fit and jumps off the plane with parachute.
+  You have to hit the hangar to get a new plane (with full energy &
+  bombs), otherwise you die.
+  (ulf?)
+
+Energy ('+' shaped)
+  Plane energy is restored back to maximum.
+  (eero)
+
+Fork
+  Plane "splits" to two planes, controlled with the same AI (keys).
+
+Ufo
+  Ufo appears from the top and starts shooting "heat-seeking" missiles
+  at the plane. It stops / disappears only when either plane or
+  the ufo die.
+  (ulf?)
+
+Zeppelin
+  Zeppelin starts to follow the plane until either zeppelin or plane
+  is killed or plane grabs the same bonus again.
+  (eero)
+
+
+So, Ufo bonus is dangerous, zeppelin, parachute, cloud, bird and
+airballoon bonuses could be annoying and others are beneficial.  Do
+you think this is good balance so that player got enough incentive to
+try to catch them (and accidentally get the nasty 'ufo' bonus :))?
+
+
+      - Eero

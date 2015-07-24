@@ -1,0 +1,17 @@
+level_name "Green Hills"
+gravity 0.1
+ground_friction 0.02
+sprite bouncer 200 200
+sprite bouncer 400 300
+sprite bouncer 600 200
+sprite bird 400 300
+sprite bird 200 400
+sprite cloud 100 300 vx=0.1
+sprite cloud 100 100
+sprite hangar 180 470
+sprite biplane 500 400 tag=p1sprite
+ai player1 p1sprite
+sprite pine 350 490
+sprite pine 500 550
+sprite pine 700 520
+sprite airballoon 100 400

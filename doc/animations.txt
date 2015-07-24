@@ -1,0 +1,97 @@
+
+Animation frames in Airstrike are stored in row in a regular picture
+file. Png is the best format since it has both compression and alpha
+channel support. Jpeg should never be used! If the alpha channel is
+missing the animation is assumed to be color-keyed, and magic pink
+(255,0,255) is used as the color key.
+
+Since there is no simple, standard, way of storing the number of
+frames in a picture (there is in png, but this is not done for other
+reasons. See below) the number of frames have to be explicitly given
+in the sprite source code. The frames are sorted by two different
+indices. The most obvious is time, but it is also possible to specify
+an addition parameter when requesting a frame in the game. This
+parameter is typically an angle which the sprite is facing, but it
+could be another form of variation, like different colors or
+whatever. The frames are stored with the time parameter varying
+fastest. If, for example, the number of time frames is 3, and the
+number of parameter frames is 2, then the picture file will look like
+|t=0,p=0|t=1,p=0|t=2,p=0|t=0,p=1|t=1,p=1,t=2,p=1|. It is possible to
+have many frames in both the t and p dimensions, but keep the memory
+requirements in mind. For memory reasons there is also no support for
+more than two parameters.
+
+In Airstrike all the important sprites (like the biplanes) have 64
+different angular variations. This seems smooth enough, and for very
+small objects it could be even lower. For an example of an animation
+with both time and parameter frames see direxpl.bmp. It has 8 time
+frames and 32 parameter frames (different angles). This makes for a
+total of 256 different frames. The number of angular frames should
+always be a power of 2, for easy integration with the rest of the
+engine (internally it works with 256 representing 360 degrees). The
+effect of combining parameter and time frame can be achieved in Povray
+by using, for example +KFC32 +KFF256 +KC together with
+
+#declare my_parameter = int(clock);
+#declare my_clock = mod(clock,1.0);
+
+in Povray. This would give 8 time frames as in the example above. It
+also causes the correct ordering of the frames in the final image. The
++KC argument is needed to make this just right (otherwise the final
+frame would have parameter = 32, instead of the correct 31).
+
+Inside the game engine the animations are affected by a number of
+things. There is a frame delay for each frame, specifying how long it
+should be displayed. This is initially set to the same value for all
+frames in an animation, but can be individually modified for special
+effects. The animation can be made to loop at the end, or to change to
+a different animation after the last frame.  
+
+In the most general case it is possible to specify a trigger function
+which is executed as a specific (time) frame is entered. This can be
+used when the animation implies certain effects, like a man firing a
+rifle, or when there is a certain periodic effect (like when the
+biplane gives off smoke). The variation parameter discussed above is
+specified by setting the anim_p variable in the sprite. It must always
+have valid values for the animation in question, and anim_p = 0 is
+always valid.  In the example of the biplane anim_p (0..63) specifies
+the angle which the biplane is facing. These explicit dependencies on
+both the number of time frames (important for frame triggers) and the
+parameter (important for the game) makes it neccessary to specify the
+number of frames inside the code, instead of in the image file.
+
+It is possible to define a 'hotspot' for each animation. This will be
+the coordinate of the image drawn at the sprite position. By default
+it is set as the center of the image, so the axis of rotation should
+be adjusted with this in mind. In general it is fine to place the
+povray origin in the center of the image, and rotate around this.
+Images are automatically cropped of all transparent borders when
+loaded, so you need not to worry about doing this yourself.
+
+** Povray specifics **
+
+Never use jitter in anti-aliasing. The -J flag removes this. Also
+don't use textures that depend much on the resolution of the final
+image or the amount of aa. The images for the game will always be
+rendered using a transparent background and antialiasing. Use the
+supplied scene file for uniform camera and lightning. Avoid bitmap
+textures as much as possible (to keep the dataset small), but they are
+certainly allowed. The object should look reasonably good without
+alpha channel in the game if possible; please check this as you
+develop.
+
+The Airstrike sprite are rendered using Povray 3.5 or later. Things
+should work on this version! There is a number of utility functions
+for achieving various effects in animations in the file fun.inc. See
+fun.ps for plots of these functions.
+
+If you find something in the scene file that you think is bad it is
+generally better to make a fix for this instead of creating you own
+specialized solution. It is easiest if all pov files can use the same
+settings (except for size and number of frames etc). Also make sure
+that the object render without using absurd amounts of memory (at
+least the sprites, backgrounds may be more complicated). To summarize:
+Use common sense and remember that other people will render you
+models, possibly on a slower computer or at a different size.
+
+--Ulf

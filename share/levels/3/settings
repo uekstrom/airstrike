@@ -1,0 +1,32 @@
+level_name "The Island"
+gravity 0.1
+bounce 0.5
+
+# handle bonuses
+sprite bonusmachine 400 20
+bonuses BIRD BOMB CLONE CLOUD
+
+# cannon in the middle of the island
+sprite cannon 400 500
+
+# dragon somewhere above
+sprite draco 300 220
+
+# and an asteroid
+sprite asteroid 400 170
+
+# then some waves...
+sprite wave   0 568
+sprite wave 256 568
+sprite wave 512 568
+sprite wave 768 568
+
+# TODO: piranhas in the water?
+
+# players: sprite x y lives [keys]
+generator player biplane 165 80 3 vx=2
+generator player biplane 645 80 3 vx=-2
+
+# and some fuel at 10 sec intervals
+generator singleton fuel 120 120 5 timeout=100
+generator singleton fuel 680 120 5 timeout=100
